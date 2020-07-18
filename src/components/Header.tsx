@@ -1,36 +1,24 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
-import { Flex, Heading, Button, Icon, Link, Tag, Box, IconButton, useColorMode } from '@chakra-ui/core';
-
+import { Flex, Heading, Button, Icon, Link, Tag, IconButton, useColorMode } from '@chakra-ui/core';
+import { injected } from '../utils/connectors';
 import { shortenAddress } from '../utils';
 import { Link as ReactLink } from 'react-router-dom';
-import { useEagerConnect, useInactiveListener } from '../hooks';
-import { injected } from '../utils/connectors';
 
 const Header = (): JSX.Element => {
     const { colorMode, toggleColorMode } = useColorMode();
-    // const { account, activate, connector, error } = useWeb3React<Web3Provider>();
-
-    const { account, activate, active, connector, error } = useWeb3React<Web3Provider>();
-
-    const triedEager = useEagerConnect();
-
-    useEffect(() => {
-        if (triedEager && !active && !error) activate(injected);
-    }, [triedEager, active, error, activate]);
-
-    useInactiveListener(!triedEager);
+    const { account, activate, connector, error } = useWeb3React<Web3Provider>();
 
     return (
         <Flex as="header" align="center" justify="space-between" p="0.75rem 1.25rem" m="0 auto">
             {/* @ts-ignore */}
             <Link as={ReactLink} to="/">
                 <Flex direction="row" align="center" justify="center" mr={5} w="100%">
-                    <Box as="span" role="img" fontSize="3rem" aria-label="box">
-                        📦
-                    </Box>
                     <Heading as="h1" size="xl" mx="0.5rem">
+                        <span role="img" aria-label="parcel emoji">
+                            📦
+                        </span>{' '}
                         Parcel
                     </Heading>
                 </Flex>
@@ -52,7 +40,8 @@ const Header = (): JSX.Element => {
                 {connector === injected && !error ? (
                     <Tag>{!!account && shortenAddress(account)}</Tag>
                 ) : (
-                    <Button onClick={() => activate(injected)} isDisabled={!triedEager || !!error}>
+                    <Button onClick={() => activate(injected)} isDisabled={!!error}>
+                        {/* isDisabled={!triedEager || !!error} */}
                         Connect
                     </Button>
                 )}

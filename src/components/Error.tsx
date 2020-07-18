@@ -16,12 +16,10 @@ function getErrorMessage(error: Error) {
 }
 
 export default function AlertMessage({ error }: { error: Error }) {
-    const errorMessage = getErrorMessage(error);
-
     return (
         <Alert status="error">
             <AlertIcon />
-            <AlertTitle mr={2}>{errorMessage}</AlertTitle>
+            <AlertTitle mr={2}>{getErrorMessage(error)}</AlertTitle>
             <AlertDescription>Please resolve the issue before continuing.</AlertDescription>
         </Alert>
     );
