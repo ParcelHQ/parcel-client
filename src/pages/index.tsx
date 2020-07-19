@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 export default function Redirect(): null {
     const { replace } = useRouter();
     useEffect(() => {
-        replace('/landing');
+        replace('/dashboard');
     }, [replace]);
     return null;
 }

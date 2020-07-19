@@ -13,6 +13,7 @@ import theme, { GlobalStyle } from '../utils/theme';
 
 const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
+//eslint-disable-next-line
 function Application({ Component }: { Component: NextComponentType }): JSX.Element | null {
     const [ready, setReady] = useState<boolean>(false);
     const { error } = useWeb3React();
@@ -41,6 +42,7 @@ export default class App extends NextApp {
             <>
                 <Head>
                     <title key="title">Parcel</title>
+                    <link key="favicon" rel="icon" href={`./favicon.ico`} />
                 </Head>
                 <Web3ReactProvider getLibrary={getLibrary}>
                     <ThemeProvider theme={theme}>

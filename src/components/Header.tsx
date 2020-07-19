@@ -1,10 +1,23 @@
 import React from 'react';
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
-import { Flex, Heading, Button, Icon, Link, Tag, IconButton, useColorMode, useDisclosure } from '@chakra-ui/core';
+import {
+    Flex,
+    Heading,
+    Button,
+    Icon,
+    Link,
+    Tag,
+    IconButton,
+    useColorMode,
+    useDisclosure,
+    Avatar,
+    AvatarBadge,
+} from '@chakra-ui/core';
 import { injected } from '../utils/connectors';
 import { shortenAddress } from '../utils';
 import NextLink from 'next/link';
+// 6F6BE9
 
 import SideDrawer from './SideDrawer';
 
@@ -16,19 +29,20 @@ const Header = ({ triedEager }: { triedEager: boolean }): JSX.Element => {
     return (
         <>
             <Flex as="header" align="center" justify="space-between" p="0.75rem 1.25rem" m="0 auto">
-                <NextLink href="/landing" passHref>
-                    <Link href="/landing" _hover={{ cursor: 'pointer' }}>
-                        <Flex direction="row" align="center" justify="center" mr={5} w="100%">
-                            <IconButton aria-label="Open Drawer" icon="arrow-forward" onClick={onOpen} />
+                <Flex align="center" mr={5} w="100%">
+                    <IconButton aria-label="Open Drawer" icon="arrow-forward" onClick={onOpen} />
+                    <NextLink href="/dashboard" passHref>
+                        <Link href="/dashboard" _hover={{ cursor: 'pointer' }}>
                             <Heading as="h1" size="xl" mx="0.5rem">
                                 <span role="img" aria-label="parcel emoji">
                                     📦
                                 </span>{' '}
                                 Parcel
                             </Heading>
-                        </Flex>
-                    </Link>
-                </NextLink>
+                        </Link>
+                    </NextLink>
+                </Flex>
+
                 <Flex align="center" justify="flex-end">
                     <IconButton
                         aria-label={`Switch to ${colorMode === 'light' ? 'dark' : 'light'} mode`}
@@ -38,9 +52,8 @@ const Header = ({ triedEager }: { triedEager: boolean }): JSX.Element => {
                         onClick={toggleColorMode}
                         icon={colorMode === 'light' ? 'moon' : 'sun'}
                     />
-                    <Link mr="1rem" href="https://github.com/ParcelHQ" isExternal aria-label="Github Link">
-                        <Icon display={{ xs: 'none', md: 'block' }} name="githubIcon" size="1.5rem" />
-                    </Link>
+
+                    <IconButton variant="ghost" aria-label="notifications" icon="bell" />
 
                     {connector === injected && !error ? (
                         <Tag>{!!account && shortenAddress(account)}</Tag>
@@ -49,6 +62,8 @@ const Header = ({ triedEager }: { triedEager: boolean }): JSX.Element => {
                             Connect
                         </Button>
                     )}
+
+                    <Avatar name="Brennan Fife" src="https://bit.ly/broken-link" />
                 </Flex>
             </Flex>
             <SideDrawer isOpen={isOpen} onClose={onClose} />
