@@ -18,9 +18,7 @@ export default function useInactiveListener(suppress = false) {
             };
             const handleAccountsChanged = (accounts: string[]) => {
                 console.log("Handling 'accountsChanged' event with payload", accounts);
-                if (accounts.length > 0) {
-                    activate(injected);
-                }
+                if (accounts.length > 0) activate(injected);
             };
             const handleNetworkChanged = (networkId: string | number) => {
                 console.log("Handling 'networkChanged' event with payload", networkId);
