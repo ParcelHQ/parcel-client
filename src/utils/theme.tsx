@@ -25,8 +25,11 @@ const customIcons = {
 
 export default {
     ...theme,
+
     colors: {
         ...theme.colors,
+        primary: { 100: '#6F6BE9' },
+        secondary: { 100: '#DBAE8E' },
     },
     icons: {
         ...theme.icons,

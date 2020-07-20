@@ -13,7 +13,7 @@ import {
 import { MdBuild, MdCall } from 'react-icons/md';
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
-import { injected, portis, fortmatic, walletconnect, walletlink } from '../utils/connectors';
+import { injected, portis, fortmatic, walletconnect, walletlink } from '../../utils/connectors';
 
 enum ConnectorNames {
     Injected = 'Injected',
@@ -56,7 +56,7 @@ const SignInModal = ({ isOpen, onClose }: any) => {
     return (
         <Modal isOpen={isOpen} onClose={onClose} isCentered>
             <ModalOverlay />
-            <ModalContent>
+            <ModalContent borderRadius="0.25rem">
                 <ModalHeader>Sign In</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
@@ -88,10 +88,10 @@ const SignInModal = ({ isOpen, onClose }: any) => {
                             Injected
                         </Button>
 
-                        <Button rightIcon={MdCall} onClick={() => SignIn('portis')}>
+                        <Button rightIcon={MdCall} onClick={() => SignIn('portis')} isDisabled>
                             Portis
                         </Button>
-                        <Button rightIcon={MdCall} onClick={() => SignIn('fortmatic')}>
+                        <Button rightIcon={MdCall} onClick={() => SignIn('fortmatic')} isDisabled>
                             Fortmatic
                         </Button>
                         <Button rightIcon={MdCall} onClick={() => SignIn('walletconnect')} isDisabled>

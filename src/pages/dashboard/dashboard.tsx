@@ -20,6 +20,7 @@ import {
     Divider,
     Stack,
     Text,
+    Progress,
 } from '@chakra-ui/core';
 // import CircleChart from '../../components/CircleChart.tst';
 
@@ -147,6 +148,11 @@ export default function Dashboard() {
                 <Box p={5} shadow="md" borderWidth="1px">
                     <Heading fontSize="xl">Current Stream</Heading>
                     {/* <CircleChart /> */}
+                    <Stack spacing={5} mt="0.5rem">
+                        <Progress color="purple" value={38} hasStripe isAnimated />
+                        <Progress color="purple" value={72} hasStripe isAnimated />
+                        <Progress color="purple" value={20} hasStripe isAnimated />
+                    </Stack>
                 </Box>
                 <Box p={5} shadow="md" borderWidth="1px">
                     <Heading fontSize="xl">Upcoming Payroll</Heading>

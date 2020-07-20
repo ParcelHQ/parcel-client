@@ -11,6 +11,9 @@ import Layout from '../components/Layout';
 import Error from '../components/Error';
 import theme, { GlobalStyle } from '../utils/theme';
 
+import 'react-datepicker/dist/react-datepicker.css';
+import '../utils/customDatePickerStyles.css';
+
 const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 //eslint-disable-next-line

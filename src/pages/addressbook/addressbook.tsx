@@ -6,9 +6,6 @@ import {
     Select,
     ButtonGroup,
     Button,
-    List,
-    ListItem,
-    ListIcon,
     Skeleton,
     useColorMode,
     Tabs,
@@ -16,27 +13,51 @@ import {
     TabPanels,
     Tab,
     TabPanel,
+    BoxProps,
 } from '@chakra-ui/core';
 // import CircleChart from '../../components/CircleChart.tst';
 import Entry from './Entry';
-import styled from '@emotion/styled';
 import { v4 as uuidv4 } from 'uuid';
 
-const Table = styled.table`
-    width: 100%;
-`;
+function Table(props: BoxProps) {
+    return (
+        <Box shadow="sm" rounded="lg" overflow="hidden">
+            <Box as="table" width="full" {...props} />
+        </Box>
+    );
+}
 
-const TableBody = styled.tbody``;
+function TableHead(props: BoxProps) {
+    return <Box as="thead" {...props} />;
+}
 
-const TableHeadTop = styled.thead``;
+function TableRow(props: BoxProps) {
+    return <Box as="tr" {...props} />;
+}
 
-const TableRow = styled.tr<{ colorMode: string }>``;
+function TableHeader(props: BoxProps) {
+    return (
+        <Box
+            as="th"
+            px="6"
+            py="3"
+            borderBottomWidth="1px"
+            backgroundColor="gray.50"
+            textAlign="left"
+            fontSize="xs"
+            color="gray.500"
+            textTransform="uppercase"
+            letterSpacing="wider"
+            lineHeight="1rem"
+            fontWeight="medium"
+            {...props}
+        />
+    );
+}
 
-const TableHead = styled.th<{
-    roundedLeft?: boolean;
-    roundedRight?: boolean;
-    colorMode?: string;
-}>``;
+function TableBody(props: BoxProps) {
+    return <Box as="tbody" {...props} />;
+}
 
 export default function AddressBook() {
     const { colorMode } = useColorMode();
@@ -106,41 +127,31 @@ export default function AddressBook() {
             </Box>
 
             <Box>
-                <Heading>Select Currency</Heading>
-                <Select placeholder="Select option">
+                <Select placeholder="Select Currency">
                     <option value="eth">ETH</option>
                     <option value="dai">DAI</option>
                     <option value="usdc">USDC</option>
                 </Select>
             </Box>
+
             <Box mt="1rem">
-                <Skeleton isLoaded={!loading}>
-                    <Table>
-                        <TableHeadTop>
-                            <TableRow colorMode={colorMode}>
-                                <TableHead colorMode={colorMode} roundedLeft>
-                                    Name
-                                </TableHead>
-                                <TableHead colorMode={colorMode}>Address / ENS</TableHead>
-                                <TableHead colorMode={colorMode}>Currency</TableHead>
-                                <TableHead colorMode={colorMode}>Salary</TableHead>
-                                <TableHead colorMode={colorMode} roundedRight>
-                                    Actions
-                                </TableHead>
-                            </TableRow>
-                        </TableHeadTop>
-                        <TableBody>
-                            {entries.length > 0 &&
-                                entries.map((entry: string) => {
-                                    return (
-                                        <TableRow colorMode={colorMode} key={uuidv4()}>
-                                            <Entry entry={entry} />
-                                        </TableRow>
-                                    );
-                                })}
-                        </TableBody>
-                    </Table>
-                </Skeleton>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableHeader>Name</TableHeader>
+                            <TableHeader>Address / ENS</TableHeader>
+                            <TableHeader>Currency</TableHeader>
+                            <TableHeader>Salary</TableHeader>
+                            <TableHeader>Actions</TableHeader>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {entries.length > 0 &&
+                            entries.map((entry: string, index: number) => {
+                                return <Entry entry={entry} key={uuidv4()} index={index} />;
+                            })}
+                    </TableBody>
+                </Table>
             </Box>
             <ButtonGroup spacing={4}>
                 <Button>Stream</Button>

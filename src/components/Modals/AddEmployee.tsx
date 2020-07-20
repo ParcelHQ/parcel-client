@@ -24,16 +24,19 @@ import {
     SliderThumb,
     Box,
     Select,
+    Flex,
 } from '@chakra-ui/core';
 // import { ReactComponent as DaiIcon } from '../../assets/currency/dai.svg';
+import DatePicker from 'react-datepicker';
+import moment from 'moment';
 
 export default function AddEmployee({ isOpen, onClose }: any) {
     const [name, setName] = useState('');
     const [address, setAddress] = useState('');
     const [department, setDepartment] = useState('');
     const [salary, setSalary] = useState(1);
-    const [startDate, setStartDate] = useState('');
-    const [endDate, setEndDate] = useState('');
+    const [startDate, setStartDate] = useState<number>(Date.now() / 1000);
+    const [endDate, setEndDate] = useState<number>(Date.now() / 1000 + 86400);
 
     const departments = ['Engineering', 'Marketing', 'HR', 'Finance'];
 
@@ -43,7 +46,7 @@ export default function AddEmployee({ isOpen, onClose }: any) {
     return (
         <Modal isOpen={isOpen} onClose={onClose} isCentered>
             <ModalOverlay />
-            <ModalContent>
+            <ModalContent borderRadius="0.25rem">
                 <ModalHeader>Add Employee</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
@@ -118,30 +121,33 @@ export default function AddEmployee({ isOpen, onClose }: any) {
                                 </NumberInputStepper>
                             </NumberInput>
                         </FormControl>
-                        <FormControl mb="1rem" isRequired>
-                            <FormLabel htmlFor="startDate">Start Date</FormLabel>
-                            <Input
-                                name="startDate"
-                                type="text"
-                                placeholder={startDate}
-                                value={startDate}
-                                onChange={(e: ChangeEvent<HTMLInputElement>) => setStartDate(e.target.value)}
-                            />
-                        </FormControl>
 
-                        <FormLabel htmlFor="end-date">End Date?</FormLabel>
-                        <Switch id="end-date" />
+                        <Flex w="100%" mb="1rem">
+                            <FormControl mr="0.5rem" isRequired>
+                                <FormLabel htmlFor="startDate">Start Date</FormLabel>
 
-                        <FormControl mb="1rem" isRequired>
-                            <FormLabel htmlFor="endDate">End Date</FormLabel>
-                            <Input
-                                name="endDate"
-                                type="text"
-                                placeholder={endDate}
-                                value={endDate}
-                                onChange={(e: ChangeEvent<HTMLInputElement>) => setEndDate(e.target.value)}
-                            />
-                        </FormControl>
+                                <DatePicker
+                                    id="startDate"
+                                    minDate={moment().toDate()}
+                                    selected={new Date(startDate * 1000)}
+                                    onChange={(date: Date) => setStartDate(date.getTime() / 1000)}
+                                    dateFormat="MMMM d, yyyy"
+                                    customInput={<Input value={startDate} />}
+                                />
+                            </FormControl>
+                            <FormControl>
+                                <FormLabel htmlFor="endDate">End Date</FormLabel>
+
+                                <DatePicker
+                                    id="endDate"
+                                    minDate={moment().toDate()}
+                                    selected={new Date(endDate * 1000)}
+                                    onChange={(date: Date) => setEndDate(date.getTime() / 1000)}
+                                    dateFormat="MMMM d, yyyy"
+                                    customInput={<Input value={endDate} />}
+                                />
+                            </FormControl>
+                        </Flex>
                     </form>
                 </ModalBody>
 

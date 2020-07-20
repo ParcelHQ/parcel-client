@@ -1,24 +1,48 @@
 import React, { useEffect, useState } from 'react';
-import { Link, Icon, IconButton } from '@chakra-ui/core';
+import { Link, Icon, IconButton, Box, BoxProps, Text } from '@chakra-ui/core';
 
 import { shortenAddress } from '../../utils';
 
-export default function Entry({ entry }: { entry: any }) {
+function TableRow(props: BoxProps) {
+    return <Box as="tr" {...props} />;
+}
+
+function TableCell(props: BoxProps) {
+    return <Box as="td" px="6" py="4" lineHeight="1.25rem" whiteSpace="nowrap" {...props} />;
+}
+
+export default function Entry({ entry, index }: { entry: any; index: any }) {
+    function isEven(index: number) {
+        if (index % 2 == 0) return true;
+        else return false;
+    }
+
     return (
-        <>
-            {
-                <>
-                    <th>{entry.name}</th>
-                    {/* new Date(marketResolutionTime * 1000).toUTCString() */}
-                    <th>{shortenAddress(entry.address)}</th>
-                    <th>{entry.currency}</th>
-                    <th>{entry.salary}</th>
-                    <th>
-                        <IconButton aria-label="Remove employee" icon="minus" />
-                        <IconButton aria-label="Edit employee" icon="edit" />
-                    </th>
-                </>
-            }
-        </>
+        <TableRow bg={isEven(index) ? 'white' : 'gray.50'}>
+            <TableCell>
+                <Text fontWeight="bold" fontSize="sm">
+                    {entry.name}
+                </Text>
+            </TableCell>
+            <TableCell>
+                <Text fontSize="sm" color="gray.500">
+                    {shortenAddress(entry.address)}
+                </Text>
+            </TableCell>
+            <TableCell>
+                <Text fontSize="sm" color="gray.500">
+                    {entry.currency}
+                </Text>
+            </TableCell>
+            <TableCell>
+                <Text fontSize="sm" color="gray.500">
+                    {entry.salary}
+                </Text>
+            </TableCell>
+            <TableCell>
+                <IconButton aria-label="Remove employee" icon="minus" />
+                <IconButton aria-label="Edit employee" icon="edit" />
+            </TableCell>
+        </TableRow>
     );
 }

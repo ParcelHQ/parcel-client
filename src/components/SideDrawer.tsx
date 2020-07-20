@@ -12,8 +12,10 @@ import {
     Text,
     Divider,
     Link,
+    Image,
 } from '@chakra-ui/core';
 import NextLink from 'next/link';
+import ParcelLogo from '../assets/logo.svg';
 
 export default function SideDrawer({ isOpen, onClose }: { isOpen: boolean; onClose: () => any }) {
     return (
@@ -22,6 +24,7 @@ export default function SideDrawer({ isOpen, onClose }: { isOpen: boolean; onClo
             <DrawerContent>
                 <DrawerCloseButton />
                 <DrawerHeader>
+                    <Image size="50px" objectFit="cover" src={ParcelLogo} alt="Parcel Logo" />
                     <Text fontSize="3xl">Parcel</Text>
                 </DrawerHeader>
 

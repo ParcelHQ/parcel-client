@@ -6,6 +6,7 @@ import {
     Heading,
     Button,
     Icon,
+    Image,
     Box,
     Link,
     Tag,
@@ -28,10 +29,10 @@ import {
 } from '@chakra-ui/core';
 import { shortenAddress } from '../utils';
 import NextLink from 'next/link';
-import SignInModal from '../components/SignInModal';
-// 6F6BE9
+import SignInModal from './Modals/SignInModal';
 
 import SideDrawer from './SideDrawer';
+import ParcelLogo from '../assets/logo.svg';
 
 const Header = ({ triedEager }: { triedEager: boolean }): JSX.Element => {
     const { colorMode, toggleColorMode } = useColorMode();
@@ -46,58 +47,57 @@ const Header = ({ triedEager }: { triedEager: boolean }): JSX.Element => {
                     <IconButton aria-label="Open Drawer" icon="arrow-forward" onClick={NavDrawer.onOpen} />
                     <NextLink href="/dashboard" passHref>
                         <Link href="/dashboard" _hover={{ cursor: 'pointer' }}>
-                            <Heading as="h1" size="xl" mx="0.5rem">
-                                <span role="img" aria-label="parcel emoji">
-                                    📦
-                                </span>{' '}
-                                Parcel
-                            </Heading>
+                            <Flex ml="1rem">
+                                <Image size="50px" objectFit="cover" src={ParcelLogo} alt="Parcel Logo" />
+                                <Heading as="h1" size="xl" mx="0.5rem">
+                                    Parcel
+                                </Heading>
+                            </Flex>
                         </Link>
                     </NextLink>
                 </Flex>
 
                 <Flex align="center" justify="flex-end">
-                    {active && !error ? (
-                        <>
-                            <IconButton
-                                aria-label={`Switch to ${colorMode === 'light' ? 'dark' : 'light'} mode`}
-                                variant="ghost"
-                                mr="2"
-                                onClick={toggleColorMode}
-                                icon={colorMode === 'light' ? 'moon' : 'sun'}
-                            />
-
-                            {!!account && (
-                                <Popover>
-                                    <PopoverTrigger>
-                                        <Box role="button">
-                                            <Tooltip
-                                                label={shortenAddress(account)}
-                                                placement="bottom"
-                                                aria-label="wallet address"
+                    <IconButton
+                        aria-label={`Switch to ${colorMode === 'light' ? 'dark' : 'light'} mode`}
+                        variant="ghost"
+                        mr="2"
+                        onClick={toggleColorMode}
+                        icon={colorMode === 'light' ? 'moon' : 'sun'}
+                    />
+                    {active && !error && !!account ? (
+                        <Popover>
+                            <PopoverTrigger>
+                                <Box role="button">
+                                    <Tooltip
+                                        label={shortenAddress(account)}
+                                        placement="bottom"
+                                        aria-label="wallet address"
+                                    >
+                                        <Box>
+                                            <Avatar
+                                                name="Brennan Fife"
+                                                src="https://bit.ly/broken-link"
+                                                bg="secondary.100"
                                             >
-                                                <Box>
-                                                    <Avatar name="Brennan Fife" src="https://bit.ly/broken-link">
-                                                        <AvatarBadge size="1.25em" bg="green.500" />
-                                                    </Avatar>
-                                                </Box>
-                                            </Tooltip>
+                                                <AvatarBadge size="1.25em" bg="primary.100" />
+                                            </Avatar>
                                         </Box>
-                                    </PopoverTrigger>
-                                    <PopoverContent zIndex={4}>
-                                        <PopoverArrow />
-                                        <PopoverCloseButton />
-                                        <PopoverHeader>Notifications</PopoverHeader>
-                                        <PopoverBody>
-                                            <List styleType="disc">
-                                                <ListItem>John has accepted your 200 DAI Stream</ListItem>
-                                                <ListItem>Melissa has requested a Stream of 437 USDC</ListItem>
-                                            </List>
-                                        </PopoverBody>
-                                    </PopoverContent>
-                                </Popover>
-                            )}
-                        </>
+                                    </Tooltip>
+                                </Box>
+                            </PopoverTrigger>
+                            <PopoverContent zIndex={4}>
+                                <PopoverArrow />
+                                <PopoverCloseButton />
+                                <PopoverHeader>Notifications</PopoverHeader>
+                                <PopoverBody>
+                                    <List>
+                                        <ListItem>John has accepted your 200 DAI Stream</ListItem>
+                                        <ListItem>Melissa has requested a Stream of 437 USDC</ListItem>
+                                    </List>
+                                </PopoverBody>
+                            </PopoverContent>
+                        </Popover>
                     ) : (
                         <Button onClick={WalletsModal.onOpen} isDisabled={!triedEager || !!error}>
                             Connect
