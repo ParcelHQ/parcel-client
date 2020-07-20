@@ -2,7 +2,7 @@ import React from 'react';
 import { AiOutlineTwitter, AiOutlineGithub } from 'react-icons/ai';
 import { Icon, Link } from '@chakra-ui/core';
 
-export default function about() {
+export default function About() {
     return (
         <>
             <Link href="https://twitter.com/parcelHQ" isExternal aria-label="Twitter Link">

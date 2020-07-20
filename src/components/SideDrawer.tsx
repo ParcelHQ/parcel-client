@@ -28,34 +28,33 @@ export default function SideDrawer({ isOpen, onClose }: { isOpen: boolean; onClo
                 <DrawerBody>
                     <Stack spacing={5}>
                         <NextLink href="/dashboard" passHref>
-                            <Link href="/dashboard" _hover={{ cursor: 'pointer' }}>
+                            <Link>
                                 <Text fontSize="xl">Dashboard</Text>
                             </Link>
                         </NextLink>
                         <NextLink href="/accounting" passHref>
-                            <Link href="/accounting" _hover={{ cursor: 'pointer' }}>
+                            <Link>
                                 <Text fontSize="xl">Accounting</Text>
                             </Link>
                         </NextLink>
                         <NextLink href="/payroll" passHref>
-                            <Link href="/payroll" _hover={{ cursor: 'pointer' }}>
+                            <Link>
                                 <Text fontSize="xl">Payroll</Text>
                             </Link>
                         </NextLink>
                         <NextLink href="/addressbook" passHref>
-                            <Link href="/addressbook" _hover={{ cursor: 'pointer' }}>
+                            <Link>
                                 <Text fontSize="xl">Address Book</Text>
                             </Link>
                         </NextLink>
-
                         <Divider />
                         <NextLink href="/about" passHref>
-                            <Link href="/about" _hover={{ cursor: 'pointer' }}>
+                            <Link>
                                 <Text fontSize="xl">About</Text>
                             </Link>
                         </NextLink>
                         <NextLink href="/settings" passHref>
-                            <Link href="/settings" _hover={{ cursor: 'pointer' }}>
+                            <Link>
                                 <Text fontSize="xl">Settings</Text>
                             </Link>
                         </NextLink>

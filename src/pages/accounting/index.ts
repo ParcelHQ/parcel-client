@@ -1,1 +1,1 @@
-export { default } from './accounting';
+export { default } from './Accounting';

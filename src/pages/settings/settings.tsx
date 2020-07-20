@@ -1,7 +1,7 @@
 import React from 'react';
 import { Select } from '@chakra-ui/core';
 
-export default function settings() {
+export default function Settings() {
     return (
         <>
             <Select placeholder="language">

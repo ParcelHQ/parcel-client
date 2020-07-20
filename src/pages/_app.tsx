@@ -43,6 +43,7 @@ export default class App extends NextApp {
                 <Head>
                     <title key="title">Parcel</title>
                     <link key="favicon" rel="icon" href={`./favicon.ico`} />
+                    <meta name="description" content="crypto payroll with saplier, ipfs, and filecoin" />
                 </Head>
                 <Web3ReactProvider getLibrary={getLibrary}>
                     <ThemeProvider theme={theme}>
