@@ -1,16 +1,19 @@
 import React from 'react';
 import { AiOutlineTwitter, AiOutlineGithub } from 'react-icons/ai';
-import { Icon, Link } from '@chakra-ui/core';
+import { Link, Box, Heading, Stack } from '@chakra-ui/core';
 
 export default function About() {
     return (
-        <>
-            <Link href="https://twitter.com/parcelHQ" isExternal aria-label="Twitter Link">
-                <Icon as={AiOutlineTwitter} size="1.5rem" />
-            </Link>
-            <Link href="https://github.com/ParcelHQ" isExternal aria-label="GitHub Link">
-                <Icon as={AiOutlineGithub} size="1.5rem" />
-            </Link>
-        </>
+        <Box>
+            <Heading mb={4}>About</Heading>
+            <Stack isInline>
+                <Link href="https://twitter.com/parcelHQ" isExternal aria-label="Twitter Link">
+                    <Box as={AiOutlineTwitter} size="3rem" />
+                </Link>
+                <Link href="https://github.com/ParcelHQ" isExternal aria-label="GitHub Link">
+                    <Box as={AiOutlineGithub} size="3rem" />
+                </Link>
+            </Stack>
+        </Box>
     );
 }
