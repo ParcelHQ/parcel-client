@@ -25,10 +25,11 @@ import {
     Box,
     Select,
     Flex,
+    Icon,
 } from '@chakra-ui/core';
-// import { ReactComponent as DaiIcon } from '../../assets/currency/dai.svg';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
+import { FiDollarSign, FiDatabase } from 'react-icons/fi';
 
 export default function AddEmployee({ isOpen, onClose }: any) {
     const [name, setName] = useState('');
@@ -102,10 +103,9 @@ export default function AddEmployee({ isOpen, onClose }: any) {
                             <Slider color="purple" flex="1" value={salary} onChange={(salary) => setSalary(salary)}>
                                 <SliderTrack />
                                 <SliderFilledTrack />
-                                {/* <SliderThumb fontSize="sm" width="32px" height="20px" children={value} /> */}
-                                {/* <SliderThumb size={6}>
-                                    <Box color="tomato" as={daiIcon} />
-                                </SliderThumb> */}
+                                <SliderThumb size={6}>
+                                    <Icon color="primary.100" as={FiDollarSign} />
+                                </SliderThumb>
                             </Slider>
                             <NumberInput
                                 defaultValue={100}

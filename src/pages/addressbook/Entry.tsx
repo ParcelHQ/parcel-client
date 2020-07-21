@@ -42,7 +42,7 @@ export default function Entry({ entry, index }: { entry: any; index: any }) {
         <>
             <TableRow bg={isEven(index) ? 'white' : 'gray.50'}>
                 <TableCell>
-                    <Text fontWeight="bold" fontSize="sm">
+                    <Text fontWeight="bold" fontSize="sm" color="gray.500">
                         {entry.name}
                     </Text>
                 </TableCell>

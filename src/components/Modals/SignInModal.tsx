@@ -9,6 +9,7 @@ import {
     ModalFooter,
     ModalBody,
     ModalCloseButton,
+    Flex,
 } from '@chakra-ui/core';
 import { MdBuild, MdCall } from 'react-icons/md';
 import { useWeb3React } from '@web3-react/core';
@@ -60,7 +61,8 @@ const SignInModal = ({ isOpen, onClose }: any) => {
                 <ModalHeader>Sign In</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                    {/* {Object.keys(connectorsByName).map((name) => {
+                    <Flex direction="column" justify="center" align="center">
+                        {/* {Object.keys(connectorsByName).map((name) => {
                         //@ts-ignore
                         const currentConnector = connectorsByName[name];
                         const activating = currentConnector === activatingConnector;
@@ -83,24 +85,27 @@ const SignInModal = ({ isOpen, onClose }: any) => {
                         );
                     })} */}
 
-                    <ButtonGroup spacing={4}>
-                        <Button leftIcon={MdBuild} onClick={() => SignIn('injected')}>
-                            Injected
-                        </Button>
+                        <Flex justify="space-between" align="center">
+                            <Button onClick={() => SignIn('injected')}>Injected</Button>
 
-                        <Button rightIcon={MdCall} onClick={() => SignIn('portis')} isDisabled>
-                            Portis
-                        </Button>
-                        <Button rightIcon={MdCall} onClick={() => SignIn('fortmatic')} isDisabled>
-                            Fortmatic
-                        </Button>
-                        <Button rightIcon={MdCall} onClick={() => SignIn('walletconnect')} isDisabled>
-                            WalletConnect
-                        </Button>
-                        <Button rightIcon={MdCall} onClick={() => SignIn('coinbase')} isDisabled>
-                            Coinbase
-                        </Button>
-                    </ButtonGroup>
+                            <Button onClick={() => SignIn('portis')} isDisabled>
+                                Portis
+                            </Button>
+                        </Flex>
+                        <Flex justify="center" align="center">
+                            <Button onClick={() => SignIn('fortmatic')} isDisabled>
+                                Fortmatic
+                            </Button>
+                            <Button onClick={() => SignIn('walletconnect')} isDisabled>
+                                WalletConnect
+                            </Button>
+                        </Flex>
+                        <Flex justify="center" align="center">
+                            <Button onClick={() => SignIn('coinbase')} isDisabled>
+                                Coinbase
+                            </Button>
+                        </Flex>
+                    </Flex>
                 </ModalBody>
 
                 <ModalFooter>

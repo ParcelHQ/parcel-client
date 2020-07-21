@@ -8,64 +8,93 @@ import {
     DrawerContent,
     DrawerCloseButton,
     Stack,
+    Icon,
     Button,
     Text,
     Divider,
     Link,
+    Box,
     Image,
+    Flex,
 } from '@chakra-ui/core';
 import NextLink from 'next/link';
-import ParcelLogo from '../assets/logo.svg';
+import { useRouter } from 'next/router';
+import styled from '@emotion/styled';
+import { FiDollarSign, FiSettings, FiBook, FiHome, FiSmile, FiEdit2 } from 'react-icons/fi';
+
+const StyledLink = styled.a<{ active: boolean }>`
+    padding: 1rem 0;
+    text-decoration: none;
+    color: ${({ active }) => (active ? '#f4f5f9' : '#eceffb')};
+`;
 
 export default function SideDrawer({ isOpen, onClose }: { isOpen: boolean; onClose: () => any }) {
+    const { pathname } = useRouter();
     return (
         <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
             <DrawerOverlay />
             <DrawerContent>
                 <DrawerCloseButton />
                 <DrawerHeader>
-                    <Image size="50px" objectFit="cover" src={ParcelLogo} alt="Parcel Logo" />
+                    <Image size="50px" objectFit="cover" src="./logo.svg" alt="Parcel Logo" />
                     <Text fontSize="3xl">Parcel</Text>
                 </DrawerHeader>
 
                 <DrawerBody>
-                    <Stack spacing={5}>
-                        <NextLink href="/dashboard" passHref>
-                            <Link>
+                    <NextLink href="/dashboard" passHref>
+                        <Link>
+                            <Flex align="center">
+                                <Icon as={FiHome} mr="1rem" />
                                 <Text fontSize="xl">Dashboard</Text>
-                            </Link>
-                        </NextLink>
-                        <NextLink href="/accounting" passHref>
-                            <Link>
+                            </Flex>
+                        </Link>
+                        {/* <StyledLink active={pathname === '/markets'}></StyledLink> */}
+                    </NextLink>
+                    <NextLink href="/accounting" passHref>
+                        <Link>
+                            <Flex align="center">
+                                <Icon as={FiEdit2} mr="1rem" />
                                 <Text fontSize="xl">Accounting</Text>
-                            </Link>
-                        </NextLink>
-                        <NextLink href="/payroll" passHref>
-                            <Link>
+                            </Flex>
+                        </Link>
+                    </NextLink>
+                    <NextLink href="/payroll" passHref>
+                        <Link>
+                            <Flex align="center">
+                                <Icon as={FiDollarSign} mr="1rem" />
                                 <Text fontSize="xl">Payroll</Text>
-                            </Link>
-                        </NextLink>
-                        <NextLink href="/addressbook" passHref>
-                            <Link>
+                            </Flex>
+                        </Link>
+                    </NextLink>
+                    <NextLink href="/addressbook" passHref>
+                        <Link>
+                            <Flex align="center">
+                                <Icon as={FiBook} mr="1rem" />
                                 <Text fontSize="xl">Address Book</Text>
-                            </Link>
-                        </NextLink>
-                        <Divider />
-                        <NextLink href="/about" passHref>
-                            <Link>
+                            </Flex>
+                        </Link>
+                    </NextLink>
+                    <Divider />
+                    <NextLink href="/about" passHref>
+                        <Link>
+                            <Flex align="center">
+                                <Icon as={FiSmile} mr="1rem" />
                                 <Text fontSize="xl">About</Text>
-                            </Link>
-                        </NextLink>
-                        <NextLink href="/settings" passHref>
-                            <Link>
+                            </Flex>
+                        </Link>
+                    </NextLink>
+                    <NextLink href="/settings" passHref>
+                        <Link>
+                            <Flex align="center">
+                                <Icon as={FiSettings} mr="1rem" />
                                 <Text fontSize="xl">Settings</Text>
-                            </Link>
-                        </NextLink>
-                    </Stack>
+                            </Flex>
+                        </Link>
+                    </NextLink>
                 </DrawerBody>
 
                 <DrawerFooter>
-                    <Button variant="outline" mr={3} onClick={onClose}>
+                    <Button variant="outline" onClick={onClose}>
                         Cancel
                     </Button>
                 </DrawerFooter>

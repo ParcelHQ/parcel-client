@@ -30,9 +30,9 @@ import {
 import { shortenAddress } from '../utils';
 import NextLink from 'next/link';
 import SignInModal from './Modals/SignInModal';
+import { AiOutlineMenuUnfold } from 'react-icons/ai';
 
 import SideDrawer from './SideDrawer';
-import ParcelLogo from '../assets/logo.svg';
 
 const Header = ({ triedEager }: { triedEager: boolean }): JSX.Element => {
     const { colorMode, toggleColorMode } = useColorMode();
@@ -44,11 +44,16 @@ const Header = ({ triedEager }: { triedEager: boolean }): JSX.Element => {
         <>
             <Flex as="header" align="center" justify="space-between" p="0.75rem 1.25rem" m="0 auto">
                 <Flex align="center" mr={5} w="100%">
-                    <IconButton aria-label="Open Drawer" icon="arrow-forward" onClick={NavDrawer.onOpen} />
+                    <IconButton aria-label="Open Drawer" icon={AiOutlineMenuUnfold} onClick={NavDrawer.onOpen} />
                     <NextLink href="/dashboard" passHref>
                         <Link href="/dashboard" _hover={{ cursor: 'pointer' }}>
                             <Flex ml="1rem">
-                                <Image size="50px" objectFit="cover" src={ParcelLogo} alt="Parcel Logo" />
+                                <Image
+                                    size={{ sm: '40px', md: '50px' }}
+                                    objectFit="cover"
+                                    src="./logo.svg"
+                                    alt="Parcel Logo"
+                                />
                                 <Heading as="h1" size="xl" mx="0.5rem">
                                     Parcel
                                 </Heading>
