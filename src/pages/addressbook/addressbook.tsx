@@ -14,8 +14,15 @@ import {
     Tab,
     TabPanel,
     BoxProps,
+    Flex,
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbSeparator,
+    useDisclosure,
 } from '@chakra-ui/core';
 // import CircleChart from '../../components/CircleChart.tst';
+import AddEmployee from '../../components/Modals/AddEmployee';
 import Entry from './Entry';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -62,6 +69,7 @@ function TableBody(props: BoxProps) {
 export default function AddressBook() {
     const { colorMode } = useColorMode();
     const [loading] = useState<boolean>(false);
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
     const entries: any[] = [
         {
@@ -96,10 +104,23 @@ export default function AddressBook() {
 
     return (
         <>
-            <Box>
-                <Heading mb={4}>Teams</Heading>
-                <Text fontSize="xl">Run payroll for teams</Text>
-            </Box>
+            <Flex justify="space-between" align="center">
+                <Flex direction="column">
+                    <Heading as="h3" size="lg" fontSize="1.5rem" font-weight="500">
+                        Teams
+                    </Heading>
+                    <Breadcrumb>
+                        <BreadcrumbItem>
+                            <BreadcrumbLink href="#">Home</BreadcrumbLink>
+                        </BreadcrumbItem>
+
+                        <BreadcrumbItem isCurrentPage>
+                            <BreadcrumbLink href="#">Address Book</BreadcrumbLink>
+                        </BreadcrumbItem>
+                    </Breadcrumb>
+                </Flex>
+                <Button onClick={onOpen}>Add Employee</Button>
+            </Flex>
             <Box>
                 <Tabs isFitted variant="enclosed">
                     <TabList>
@@ -153,10 +174,7 @@ export default function AddressBook() {
                     </TableBody>
                 </Table>
             </Box>
-            <ButtonGroup spacing={4}>
-                <Button>Stream</Button>
-                <Button>Pay</Button>
-            </ButtonGroup>
+            <AddEmployee isOpen={isOpen} onClose={onClose} />
         </>
     );
 }

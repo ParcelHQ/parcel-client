@@ -85,22 +85,20 @@ const SignInModal = ({ isOpen, onClose }: any) => {
                         );
                     })} */}
 
-                        <Flex justify="space-between" align="center">
+                        <Flex direction="column" justify="space-between" align="center">
                             <Button onClick={() => SignIn('injected')}>Injected</Button>
 
                             <Button onClick={() => SignIn('portis')} isDisabled>
                                 Portis
                             </Button>
-                        </Flex>
-                        <Flex justify="center" align="center">
+
                             <Button onClick={() => SignIn('fortmatic')} isDisabled>
                                 Fortmatic
                             </Button>
                             <Button onClick={() => SignIn('walletconnect')} isDisabled>
                                 WalletConnect
                             </Button>
-                        </Flex>
-                        <Flex justify="center" align="center">
+
                             <Button onClick={() => SignIn('coinbase')} isDisabled>
                                 Coinbase
                             </Button>

@@ -26,17 +26,23 @@ import {
     PopoverFooter,
     PopoverArrow,
     PopoverCloseButton,
+    Accordion,
+    AccordionItem,
+    AccordionHeader,
+    AccordionPanel,
+    AccordionIcon,
+    Text,
+    Badge,
 } from '@chakra-ui/core';
 import { shortenAddress } from '../utils';
 import NextLink from 'next/link';
 import SignInModal from './Modals/SignInModal';
 import { AiOutlineMenuUnfold } from 'react-icons/ai';
-
 import SideDrawer from './SideDrawer';
 
 const Header = ({ triedEager }: { triedEager: boolean }): JSX.Element => {
     const { colorMode, toggleColorMode } = useColorMode();
-    const { account, active, connector, error } = useWeb3React<Web3Provider>();
+    const { account, active, connector, error, deactivate } = useWeb3React<Web3Provider>();
     const NavDrawer = useDisclosure();
     const WalletsModal = useDisclosure();
 
@@ -46,8 +52,8 @@ const Header = ({ triedEager }: { triedEager: boolean }): JSX.Element => {
                 <Flex align="center" mr={5} w="100%">
                     <IconButton aria-label="Open Drawer" icon={AiOutlineMenuUnfold} onClick={NavDrawer.onOpen} />
                     <NextLink href="/dashboard" passHref>
-                        <Link href="/dashboard" _hover={{ cursor: 'pointer' }}>
-                            <Flex ml="1rem">
+                        <Link href="/dashboard" _hover={{ cursor: 'pointer' }} ml="1rem">
+                            <Flex>
                                 <Image
                                     size={{ sm: '40px', md: '50px' }}
                                     objectFit="cover"
@@ -71,7 +77,7 @@ const Header = ({ triedEager }: { triedEager: boolean }): JSX.Element => {
                         icon={colorMode === 'light' ? 'moon' : 'sun'}
                     />
                     {active && !error && !!account ? (
-                        <Popover>
+                        <Popover usePortal>
                             <PopoverTrigger>
                                 <Box role="button">
                                     <Tooltip
@@ -94,13 +100,35 @@ const Header = ({ triedEager }: { triedEager: boolean }): JSX.Element => {
                             <PopoverContent zIndex={4}>
                                 <PopoverArrow />
                                 <PopoverCloseButton />
-                                <PopoverHeader>Notifications</PopoverHeader>
+                                <PopoverHeader border="none">
+                                    <Text fontWeight="bold">Brennan Fife</Text>
+                                    <Box>
+                                        <Badge variantColor="purple">Human Resources</Badge>
+                                    </Box>
+                                </PopoverHeader>
                                 <PopoverBody>
-                                    <List>
-                                        <ListItem>John has accepted your 200 DAI Stream</ListItem>
-                                        <ListItem>Melissa has requested a Stream of 437 USDC</ListItem>
-                                    </List>
+                                    <Accordion allowToggle>
+                                        <AccordionItem>
+                                            <AccordionHeader>
+                                                <Box textAlign="left" fontWeight="bold">
+                                                    Notifications
+                                                </Box>
+                                                <AccordionIcon />
+                                            </AccordionHeader>
+                                            <AccordionPanel pb={4}>
+                                                <List styleType="disc">
+                                                    <ListItem>John has accepted your 200 DAI Stream</ListItem>
+                                                    <ListItem>Melissa has requested a Stream of 437 USDC</ListItem>
+                                                </List>
+                                            </AccordionPanel>
+                                        </AccordionItem>
+                                    </Accordion>
                                 </PopoverBody>
+                                <PopoverFooter border="none">
+                                    <Button variantColor="purple" onClick={() => deactivate()}>
+                                        Sign Out
+                                    </Button>
+                                </PopoverFooter>
                             </PopoverContent>
                         </Popover>
                     ) : (

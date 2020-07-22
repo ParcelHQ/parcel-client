@@ -1,5 +1,19 @@
 import React, { useState } from 'react';
-import { Flex, Box, BoxProps, Heading, useColorMode, Button, Skeleton, Text, Link } from '@chakra-ui/core';
+import {
+    Flex,
+    Box,
+    BoxProps,
+    Heading,
+    useColorMode,
+    Button,
+    Skeleton,
+    Text,
+    Link,
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbSeparator,
+} from '@chakra-ui/core';
 import Entry from './Entry';
 
 function Table(props: BoxProps) {
@@ -84,10 +98,21 @@ export default function Accounting(): JSX.Element {
 
     return (
         <>
-            <Flex>
-                <Heading as="h3" size="lg" fontSize="1.5rem" font-weight="500">
-                    Transactions History
-                </Heading>
+            <Flex justify="space-between" align="center">
+                <Flex direction="column">
+                    <Heading as="h3" size="lg" fontSize="1.5rem" font-weight="500">
+                        Transactions History
+                    </Heading>
+                    <Breadcrumb>
+                        <BreadcrumbItem>
+                            <BreadcrumbLink href="#">Home</BreadcrumbLink>
+                        </BreadcrumbItem>
+
+                        <BreadcrumbItem isCurrentPage>
+                            <BreadcrumbLink href="#">Accounting</BreadcrumbLink>
+                        </BreadcrumbItem>
+                    </Breadcrumb>
+                </Flex>
                 <Button>Export CSV</Button>
             </Flex>
             <Box p="4" height="100vh">

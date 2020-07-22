@@ -1,5 +1,18 @@
 import React, { useState } from 'react';
-import { Flex, Box, Heading, useColorMode, Skeleton, Button, BoxProps, useDisclosure } from '@chakra-ui/core';
+import {
+    Flex,
+    Box,
+    Heading,
+    useColorMode,
+    Skeleton,
+    Button,
+    BoxProps,
+    useDisclosure,
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbSeparator,
+} from '@chakra-ui/core';
 import Entry from './Entry';
 import AddEmployee from '../../components/Modals/AddEmployee';
 import { v4 as uuidv4 } from 'uuid';
@@ -85,10 +98,21 @@ export default function Payroll(): JSX.Element {
 
     return (
         <>
-            <Flex>
-                <Heading as="h3" size="lg" fontSize="1.5rem" font-weight="500">
-                    Manage Employees
-                </Heading>
+            <Flex justify="space-between" align="center">
+                <Flex direction="column">
+                    <Heading as="h3" size="lg" fontSize="1.5rem" font-weight="500">
+                        Manage Employees
+                    </Heading>
+                    <Breadcrumb>
+                        <BreadcrumbItem>
+                            <BreadcrumbLink href="#">Home</BreadcrumbLink>
+                        </BreadcrumbItem>
+
+                        <BreadcrumbItem isCurrentPage>
+                            <BreadcrumbLink href="#">Payroll</BreadcrumbLink>
+                        </BreadcrumbItem>
+                    </Breadcrumb>
+                </Flex>
                 <Button onClick={onOpen}>Add Employee</Button>
             </Flex>
 

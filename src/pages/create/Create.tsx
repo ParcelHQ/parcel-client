@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useWeb3React } from '@web3-react/core';
+import { Web3Provider } from '@ethersproject/providers';
 import {
     Heading,
     Button,
     Input,
-    Stack,
     InputGroup,
     InputRightAddon,
     Flex,
@@ -14,10 +15,24 @@ import {
 } from '@chakra-ui/core';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
+import axios from 'axios';
 
 export default function Create() {
-    const [name, setName] = useState<string>('');
     const router = useRouter();
+    const { account } = useWeb3React<Web3Provider>();
+
+    const [organization, setOrganization] = useState<any>({
+        name: '',
+        walletAddress: '',
+        ens: '',
+        logo: '',
+        createdBy: '',
+        createdOn: '',
+    });
+    useEffect(() => {
+        if (!!account) setOrganization({ ...organization, createdBy: account });
+        // return () => {};
+    }, [account]);
 
     const { register, errors, handleSubmit } = useForm<{ name: string }>({
         mode: 'onChange',
@@ -27,6 +42,7 @@ export default function Create() {
         // e.preventDefault();
         const nameWithId = name + 'parcelid.eth';
         console.log('nameWithId:', nameWithId);
+
         router.push('/dashboard');
     };
 
@@ -35,20 +51,21 @@ export default function Create() {
             <Box mx="auto" maxWidth="1280px">
                 <Flex direction="column" justify="center" align="center">
                     <Heading as="h1" size="2xl" fontSize="2.25rem" fontWeight="800">
-                        Register a name
+                        Register an Organization
                     </Heading>
 
                     <form onSubmit={handleSubmit(onSubmit)} style={{ textAlign: 'center' }}>
                         <FormControl>
-                            {/* <FormLabel htmlFor="name" /> */}
+                            {/* <FormLabel htmlFor="orgWalletAddress">ENS ID</FormLabel> */}
                             <InputGroup size="md" my="2rem">
                                 <Input
-                                    id="name"
+                                    id="ensName"
                                     rounded="0"
                                     placeholder="ethglobal"
                                     isRequired
-                                    onChange={(e: any) => setName(e.target.value)}
-                                    name="name"
+                                    onChange={(e: any) => setOrganization({ ...organization, ens: e.target.value })}
+                                    name="ensName"
+                                    value={organization.ens}
                                     ref={register({
                                         required: 'This is required',
                                         minLength: {

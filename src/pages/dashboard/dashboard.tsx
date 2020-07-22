@@ -9,17 +9,22 @@ import {
     StatHelpText,
     StatArrow,
     StatGroup,
+    Text,
     List,
     ListItem,
     ListIcon,
     Spinner,
     Divider,
     Stack,
-    Text,
     Progress,
     BoxProps,
+    Grid,
+    Flex,
+    Tooltip,
+    Tag,
 } from '@chakra-ui/core';
 import Entry from './Entry';
+import styled from '@emotion/styled';
 
 function Table(props: BoxProps) {
     return (
@@ -44,10 +49,10 @@ function TableHeader(props: BoxProps) {
             px="6"
             py="3"
             borderBottomWidth="1px"
-            backgroundColor="gray.50"
             textAlign="left"
             fontSize="xs"
             color="gray.500"
+            backgroundColor="gray.50"
             textTransform="uppercase"
             letterSpacing="wider"
             lineHeight="1rem"
@@ -87,44 +92,29 @@ export default function Dashboard() {
 
     const entries: any[] = [
         {
-            name: 'John Doe',
-            address: '0x1d9999be880e7e516dEefdA00a3919BdDE9C1707',
-            currency: 'DAI',
-            salary: '1800000000000000000',
+            remark: 'Paid Marketing Team',
+            date: 1595191030609,
+            recipients: '0x1d9999be880e7e516dEefdA00a3919BdDE9C1707',
         },
         {
-            name: 'John Doe',
-            address: '0x1d9999be880e7e516dEefdA00a3919BdDE9C1707',
-            currency: 'DAI',
-            salary: '1800000000000000000',
+            remark: 'Added Time Berners Lee',
+            date: 1595191030609,
+            recipients: '0x1d9999be880e7e516dEefdA00a3919BdDE9C1707',
         },
         {
-            name: 'John Doe',
-            address: '0x1d9999be880e7e516dEefdA00a3919BdDE9C1707',
-            currency: 'DAI',
-            salary: '1800000000000000000',
-        },
-        {
-            name: 'John Doe',
-            address: '0x1d9999be880e7e516dEefdA00a3919BdDE9C1707',
-            currency: 'DAI',
-            salary: '1800000000000000000',
-        },
-        {
-            name: 'John Doe',
-            address: '0x1d9999be880e7e516dEefdA00a3919BdDE9C1707',
-            currency: 'DAI',
-            salary: '1800000000000000000',
+            remark: 'Paid Larry Ellison',
+            date: 1595191030609,
+            recipients: '0x1d9999be880e7e516dEefdA00a3919BdDE9C1707',
         },
     ];
 
     return (
         <>
-            <Box>
-                <Heading>Balances</Heading>
-            </Box>
+            <Tag mb="1rem" shadow="sm">
+                <Text fontSize="2xl">Balances & Streams</Text>
+            </Tag>
 
-            <Stack spacing={8} isInline align="center">
+            <Grid templateColumns="repeat(auto-fit, minmax(120px, 1fr))" gap={6}>
                 <Stat p="1rem 2rem" shadow="md" borderWidth="1px" borderRadius="1rem">
                     <StatLabel>ETH</StatLabel>
                     {isEthLoading ? (
@@ -139,7 +129,6 @@ export default function Dashboard() {
                         </>
                     )}
                 </Stat>
-
                 <Stat p="1rem 2rem" shadow="md" borderWidth="1px" borderRadius="1rem">
                     <StatLabel>DAI</StatLabel>
                     {isDaiLoading ? (
@@ -154,7 +143,6 @@ export default function Dashboard() {
                         </>
                     )}
                 </Stat>
-
                 <Stat p="1rem 2rem" shadow="md" borderWidth="1px" borderRadius="1rem">
                     <StatLabel>USDC</StatLabel>
                     {isUsdcLoading ? (
@@ -169,7 +157,6 @@ export default function Dashboard() {
                         </>
                     )}
                 </Stat>
-
                 <Stat p="1rem 2rem" shadow="md" borderWidth="1px" borderRadius="1rem">
                     <StatLabel>USDT</StatLabel>
                     {isUsdtLoading ? (
@@ -184,7 +171,6 @@ export default function Dashboard() {
                         </>
                     )}
                 </Stat>
-
                 <Stat p="1rem 2rem" shadow="md" borderWidth="1px" borderRadius="1rem">
                     <StatLabel>WBTC</StatLabel>
                     {isWbtcLoading ? (
@@ -199,18 +185,29 @@ export default function Dashboard() {
                         </>
                     )}
                 </Stat>
-            </Stack>
+            </Grid>
 
-            <Stack mt="1rem" isInline align="center">
-                <Box p={5} shadow="md" borderWidth="1px" borderRadius="1rem">
-                    <Heading fontSize="xl">Current Stream</Heading>
+            <Grid templateColumns="repeat(auto-fit, minmax(120px, 1fr))" gap={6} mt="1rem">
+                <Box p={5} shadow="md" borderWidth="1px" borderRadius="1rem" gridColumn="span 2 / auto">
+                    <Heading fontSize="xl">Current Streams</Heading>
                     <Stack spacing={5} mt="0.5rem">
-                        <Progress color="purple" value={38} hasStripe isAnimated />
-                        <Progress color="purple" value={72} hasStripe isAnimated />
-                        <Progress color="purple" value={20} hasStripe isAnimated />
+                        <Box>
+                            <Progress color="purple" value={38} hasStripe isAnimated />
+                            <Text>Alan Turing - 38%</Text>
+                        </Box>
+
+                        <Box>
+                            <Progress color="purple" value={72} hasStripe isAnimated />
+                            <Text>Steve Jobs - 72%</Text>
+                        </Box>
+
+                        <Box>
+                            <Progress color="purple" value={20} hasStripe isAnimated />
+                            <Text>Bill Gates - 20%</Text>
+                        </Box>
                     </Stack>
                 </Box>
-                <Box p={5} shadow="md" borderWidth="1px" borderRadius="1rem">
+                <Box p={5} shadow="md" borderWidth="1px" borderRadius="1rem" gridColumn="span 3 / auto">
                     <Heading fontSize="xl">Upcoming Payroll</Heading>
                     <Box mt={4}>
                         <List spacing={3}>
@@ -225,18 +222,21 @@ export default function Dashboard() {
                         </List>
                     </Box>
                 </Box>
-            </Stack>
+            </Grid>
 
-            <Divider />
+            <Divider my="2rem" />
 
-            <Box p="4" height="100vh">
+            <Box>
+                <Tag mb="1rem" shadow="sm">
+                    <Text fontSize="2xl">Recent Transactions</Text>
+                </Tag>
+
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableHeader>Date</TableHeader>
-                            <TableHeader>Receiver</TableHeader>
                             <TableHeader>Remarks</TableHeader>
-                            <TableHeader>Amount</TableHeader>
+                            <TableHeader>Date</TableHeader>
+                            <TableHeader>Recipient(s)</TableHeader>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -247,22 +247,6 @@ export default function Dashboard() {
                     </TableBody>
                 </Table>
             </Box>
-
-            {/* <Box>
-                <Stack>
-                    <Heading>Recent Activity</Heading>
-                    <List spacing={3}>
-                        <ListItem>
-                            <ListIcon icon="check-circle" color="green.500" />
-                            Payroll due on 1st August, 2020 of Marketing team - $20k
-                        </ListItem>
-                        <ListItem>
-                            <ListIcon icon="check-circle" color="green.500" />
-                            Payroll due on 1st August, 2020 of Engineering team - $90k
-                        </ListItem>
-                    </List>
-                </Stack>
-            </Box> */}
         </>
     );
 }

@@ -15,6 +15,7 @@ import {
     BoxProps,
     Box,
 } from '@chakra-ui/core';
+import NextLink from 'next/link';
 
 import { shortenAddress } from '../../utils';
 
@@ -42,9 +43,13 @@ export default function Entry({ entry, index }: { entry: any; index: any }) {
         <>
             <TableRow bg={isEven(index) ? 'white' : 'gray.50'}>
                 <TableCell>
-                    <Text fontWeight="bold" fontSize="sm" color="gray.500">
-                        {entry.name}
-                    </Text>
+                    <NextLink href="/profile" passHref>
+                        <Link href="/profile">
+                            <Text fontWeight="bold" fontSize="sm" color="gray.500">
+                                {entry.name}
+                            </Text>
+                        </Link>
+                    </NextLink>
                 </TableCell>
                 <TableCell>
                     <Text fontSize="sm" color="gray.500">
