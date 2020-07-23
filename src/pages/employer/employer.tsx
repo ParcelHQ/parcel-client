@@ -1,18 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Heading, Text, Box, Button, Link, Flex } from '@chakra-ui/core';
 import NextLink from 'next/link';
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
-import { AiOutlineUserAdd, AiOutlineUser } from 'react-icons/ai';
-
-enum role {
-    employer,
-    employee,
-}
 
 export default function Employer(): JSX.Element {
     const { active } = useWeb3React<Web3Provider>();
-    const [userRole, setUserRole] = useState<role | string>('');
 
     return (
         <Box pb="6rem" pt="10rem">

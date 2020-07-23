@@ -7,20 +7,18 @@ import {
     DrawerOverlay,
     DrawerContent,
     DrawerCloseButton,
-    Stack,
     Icon,
     Button,
     Text,
     Divider,
     Link,
-    Box,
     Image,
     Flex,
 } from '@chakra-ui/core';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import styled from '@emotion/styled';
-import { FiDollarSign, FiSettings, FiBook, FiHome, FiSmile, FiEdit2 } from 'react-icons/fi';
+import { FiDollarSign, FiSettings, FiHome, FiSmile, FiEdit2, FiFilePlus, FiUsers } from 'react-icons/fi';
 
 const StyledLink = styled.a<{ active: boolean }>`
     padding: 1rem 0;
@@ -66,15 +64,33 @@ export default function SideDrawer({ isOpen, onClose }: { isOpen: boolean; onClo
                             </Flex>
                         </Link>
                     </NextLink>
-                    <NextLink href="/addressbook" passHref>
+                    <NextLink href="/people" passHref>
                         <Link>
                             <Flex align="center">
-                                <Icon as={FiBook} mr="1rem" />
-                                <Text fontSize="xl">Address Book</Text>
+                                <Icon as={FiUsers} mr="1rem" />
+                                <Text fontSize="xl">People</Text>
                             </Flex>
                         </Link>
                     </NextLink>
+                    <NextLink href="/documents" passHref>
+                        <Link>
+                            <Flex align="center">
+                                <Icon as={FiFilePlus} mr="1rem" />
+                                <Text fontSize="xl">Documents</Text>
+                            </Flex>
+                        </Link>
+                    </NextLink>
+
                     <Divider />
+
+                    <NextLink href="/companydetails" passHref>
+                        <Link>
+                            <Flex align="center">
+                                <Icon as={FiHome} mr="1rem" />
+                                <Text fontSize="xl">Company Details</Text>
+                            </Flex>
+                        </Link>
+                    </NextLink>
                     <NextLink href="/about" passHref>
                         <Link>
                             <Flex align="center">

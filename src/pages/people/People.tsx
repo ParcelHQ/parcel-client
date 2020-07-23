@@ -1,13 +1,10 @@
-import React, { useState, forwardRef } from 'react';
+import React, { forwardRef, useMemo } from 'react';
 import {
     Box,
     Heading,
     Text,
     Select,
-    ButtonGroup,
     Button,
-    Skeleton,
-    useColorMode,
     Tabs,
     TabList,
     TabPanels,
@@ -18,17 +15,15 @@ import {
     Breadcrumb,
     BreadcrumbItem,
     BreadcrumbLink,
-    BreadcrumbSeparator,
     useDisclosure,
 } from '@chakra-ui/core';
-// import CircleChart from '../../components/CircleChart.tst';
 import AddEmployee from '../../components/Modals/AddEmployee';
-import Entry from './Entry';
 import { v4 as uuidv4 } from 'uuid';
+import { useTable } from 'react-table';
 
 function Table(props: BoxProps) {
     return (
-        <Box shadow="sm" rounded="lg" overflow="hidden">
+        <Box shadow="sm" rounded="lg" overflow="auto" borderWidth="1px">
             <Box as="table" width="full" {...props} />
         </Box>
     );
@@ -49,14 +44,14 @@ function TableHeader(props: BoxProps) {
             px="6"
             py="3"
             borderBottomWidth="1px"
-            backgroundColor="gray.50"
+            // backgroundColor="gray.50"
+            // color="gray.500"
             textAlign="left"
             fontSize="xs"
-            color="gray.500"
             textTransform="uppercase"
             letterSpacing="wider"
             lineHeight="1rem"
-            fontWeight="medium"
+            fontWeight="bold"
             {...props}
         />
     );
@@ -66,31 +61,62 @@ function TableBody(props: BoxProps) {
     return <Box as="tbody" {...props} />;
 }
 
-export default function AddressBook() {
-    const { colorMode } = useColorMode();
-    const [loading] = useState<boolean>(false);
+function TableCell(props: BoxProps) {
+    return <Box as="td" px="6" py="4" lineHeight="1.25rem" whiteSpace="nowrap" {...props} />;
+}
+
+export default function People() {
     const { isOpen, onOpen, onClose } = useDisclosure();
 
-    const entries: any[] = [
-        {
-            name: 'John Doe',
-            address: '0x1d9999be880e7e516dEefdA00a3919BdDE9C1707',
-            currency: 'DAI',
-            salary: '1800000000000000000',
-        },
-        {
-            name: 'John Doe',
-            address: '0x1d9999be880e7e516dEefdA00a3919BdDE9C1707',
-            currency: 'DAI',
-            salary: '1800000000000000000',
-        },
-        {
-            name: 'John Doe',
-            address: '0x1d9999be880e7e516dEefdA00a3919BdDE9C1707',
-            currency: 'DAI',
-            salary: '1800000000000000000',
-        },
-    ];
+    const data = useMemo(
+        () => [
+            {
+                col1: 'John Doe',
+                // colx: '0x1d9999be880e7e516dEefdA00a3919BdDE9C1707',
+                col2: 'DAI',
+                col3: '1800000000000000000',
+            },
+            {
+                col1: 'John Doe',
+                // colx: '0x1d9999be880e7e516dEefdA00a3919BdDE9C1707',
+                col2: 'DAI',
+                col3: '1800000000000000000',
+            },
+            {
+                col1: 'John Doe',
+                // colx: '0x1d9999be880e7e516dEefdA00a3919BdDE9C1707',
+                col2: 'DAI',
+                col3: '1800000000000000000',
+            },
+        ],
+        [],
+    );
+
+    const columns = useMemo(
+        () => [
+            {
+                Header: 'Employee',
+                accessor: 'col1',
+            },
+            {
+                Header: 'Currency',
+                accessor: 'col2',
+            },
+            {
+                Header: 'Salary',
+                accessor: 'col3',
+            },
+        ],
+        [],
+    );
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        rows,
+        prepareRow,
+        //@ts-ignore
+    } = useTable({ columns, data });
 
     // eslint-disable-next-line react/display-name
     const ActiveTab = forwardRef((props: any, ref: any) => {
@@ -107,7 +133,7 @@ export default function AddressBook() {
             <Flex justify="space-between" align="center">
                 <Flex direction="column">
                     <Heading as="h3" size="lg" fontSize="1.5rem" font-weight="500">
-                        Teams
+                        Address Book
                     </Heading>
                     <Breadcrumb>
                         <BreadcrumbItem>
@@ -115,7 +141,7 @@ export default function AddressBook() {
                         </BreadcrumbItem>
 
                         <BreadcrumbItem isCurrentPage>
-                            <BreadcrumbLink href="#">Address Book</BreadcrumbLink>
+                            <BreadcrumbLink href="#">People</BreadcrumbLink>
                         </BreadcrumbItem>
                     </Breadcrumb>
                 </Flex>
@@ -126,7 +152,7 @@ export default function AddressBook() {
                     <TabList>
                         <ActiveTab>Engineering</ActiveTab>
                         <ActiveTab>Marketing</ActiveTab>
-                        <ActiveTab>HR</ActiveTab>
+                        <ActiveTab>Human Resources</ActiveTab>
                         <ActiveTab>Finance</ActiveTab>
                     </TabList>
 
@@ -156,7 +182,37 @@ export default function AddressBook() {
             </Box>
 
             <Box mt="1rem">
-                <Table>
+                <Table {...getTableProps()}>
+                    <TableHead>
+                        {headerGroups.map((headerGroup) => (
+                            <TableRow {...headerGroup.getHeaderGroupProps()} key={uuidv4()}>
+                                {headerGroup.headers.map((column) => (
+                                    <TableHeader {...column.getHeaderProps()} key={uuidv4()}>
+                                        {column.render('Header')}
+                                    </TableHeader>
+                                ))}
+                            </TableRow>
+                        ))}
+                    </TableHead>
+                    <TableBody {...getTableBodyProps()}>
+                        {rows.map((row) => {
+                            prepareRow(row);
+
+                            return (
+                                <TableRow {...row.getRowProps()} key={uuidv4()}>
+                                    {row.cells.map((cell) => {
+                                        return (
+                                            <TableCell {...cell.getCellProps()} key={uuidv4()}>
+                                                <Text fontSize="sm">{cell.render('Cell')}</Text>
+                                            </TableCell>
+                                        );
+                                    })}
+                                </TableRow>
+                            );
+                        })}
+                    </TableBody>
+                </Table>
+                {/* <Table>
                     <TableHead>
                         <TableRow>
                             <TableHeader>Name</TableHeader>
@@ -172,7 +228,7 @@ export default function AddressBook() {
                                 return <Entry entry={entry} key={uuidv4()} index={index} />;
                             })}
                     </TableBody>
-                </Table>
+                </Table> */}
             </Box>
             <AddEmployee isOpen={isOpen} onClose={onClose} />
         </>

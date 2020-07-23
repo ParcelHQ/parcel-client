@@ -1,24 +1,22 @@
-import React, { useState } from 'react';
+import React, { useMemo } from 'react';
 import {
     Flex,
     Box,
     BoxProps,
     Heading,
-    useColorMode,
     Button,
-    Skeleton,
     Text,
-    Link,
     Breadcrumb,
     BreadcrumbItem,
     BreadcrumbLink,
-    BreadcrumbSeparator,
 } from '@chakra-ui/core';
-import Entry from './Entry';
+import { shortenAddress } from '../../utils';
+import { useTable } from 'react-table';
+import { v4 as uuidv4 } from 'uuid';
 
 function Table(props: BoxProps) {
     return (
-        <Box shadow="sm" rounded="lg" overflow="hidden">
+        <Box shadow="sm" rounded="lg" overflow="auto" borderWidth="1px">
             <Box as="table" width="full" {...props} />
         </Box>
     );
@@ -39,14 +37,14 @@ function TableHeader(props: BoxProps) {
             px="6"
             py="3"
             borderBottomWidth="1px"
-            backgroundColor="gray.50"
+            // backgroundColor="gray.50"
+            // color="gray.500"
             textAlign="left"
             fontSize="xs"
-            color="gray.500"
             textTransform="uppercase"
             letterSpacing="wider"
             lineHeight="1rem"
-            fontWeight="medium"
+            fontWeight="bold"
             {...props}
         />
     );
@@ -61,40 +59,59 @@ function TableCell(props: BoxProps) {
 }
 
 export default function Accounting(): JSX.Element {
-    const [loading] = useState<boolean>(false);
+    const data = useMemo(
+        () => [
+            {
+                col1: new Date(1595191030609).toUTCString(),
+                col2: '0x1d9999be880e7e516dEefdA00a3919BdDE9C1707',
+                col3: 'Paid to John Doe',
+                col4: '1800000000000000000',
+            },
+            {
+                col1: new Date(1595191030609).toUTCString(),
+                col2: '0x1d9999be880e7e516dEefdA00a3919BdDE9C1707',
+                col3: 'Paid to John Doe',
+                col4: '1800000000000000000',
+            },
+            {
+                col1: new Date(1595191030609).toUTCString(),
+                col2: '0x1d9999be880e7e516dEefdA00a3919BdDE9C1707',
+                col3: 'Paid to John Doe',
+                col4: '1800000000000000000',
+            },
+        ],
+        [],
+    );
 
-    const entries: any[] = [
-        {
-            date: 1595191030609,
-            receiver: '0x1d9999be880e7e516dEefdA00a3919BdDE9C1707',
-            remarks: 'Paid to John Doe',
-            amount: '1800000000000000000',
-        },
-        {
-            date: 1595191030609,
-            receiver: '0x1d9999be880e7e516dEefdA00a3919BdDE9C1707',
-            remarks: 'Paid to John Doe',
-            amount: '1800000000000000000',
-        },
-        {
-            date: 1595191030609,
-            receiver: '0x1d9999be880e7e516dEefdA00a3919BdDE9C1707',
-            remarks: 'Paid to John Doe',
-            amount: '1800000000000000000',
-        },
-        {
-            date: 1595191030609,
-            receiver: '0x1d9999be880e7e516dEefdA00a3919BdDE9C1707',
-            remarks: 'Paid to John Doe',
-            amount: '1800000000000000000',
-        },
-        {
-            date: 1595191030609,
-            receiver: '0x1d9999be880e7e516dEefdA00a3919BdDE9C1707',
-            remarks: 'Paid to John Doe',
-            amount: '1800000000000000000',
-        },
-    ];
+    const columns = useMemo(
+        () => [
+            {
+                Header: 'Date',
+                accessor: 'col1',
+            },
+            {
+                Header: 'Receiver',
+                accessor: 'col2',
+            },
+            {
+                Header: 'Remarks',
+                accessor: 'col3',
+            },
+            {
+                Header: 'Amount',
+                accessor: 'col4',
+            },
+        ],
+        [],
+    );
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        rows,
+        prepareRow,
+        //@ts-ignore
+    } = useTable({ columns, data });
 
     return (
         <>
@@ -116,20 +133,34 @@ export default function Accounting(): JSX.Element {
                 <Button>Export CSV</Button>
             </Flex>
             <Box p="4" height="100vh">
-                <Table>
+                <Table {...getTableProps()}>
                     <TableHead>
-                        <TableRow>
-                            <TableHeader>Date</TableHeader>
-                            <TableHeader>Receiver</TableHeader>
-                            <TableHeader>Remarks</TableHeader>
-                            <TableHeader>Amount</TableHeader>
-                        </TableRow>
+                        {headerGroups.map((headerGroup) => (
+                            <TableRow {...headerGroup.getHeaderGroupProps()} key={uuidv4()}>
+                                {headerGroup.headers.map((column) => (
+                                    <TableHeader {...column.getHeaderProps()} key={uuidv4()}>
+                                        {column.render('Header')}
+                                    </TableHeader>
+                                ))}
+                            </TableRow>
+                        ))}
                     </TableHead>
-                    <TableBody>
-                        {entries.length > 0 &&
-                            entries.map((entry: string, index: number) => {
-                                return <Entry entry={entry} key={index} index={index} />;
-                            })}
+                    <TableBody {...getTableBodyProps()}>
+                        {rows.map((row) => {
+                            prepareRow(row);
+
+                            return (
+                                <TableRow {...row.getRowProps()} key={uuidv4()}>
+                                    {row.cells.map((cell) => {
+                                        return (
+                                            <TableCell {...cell.getCellProps()} key={uuidv4()}>
+                                                <Text fontSize="sm">{cell.render('Cell')}</Text>
+                                            </TableCell>
+                                        );
+                                    })}
+                                </TableRow>
+                            );
+                        })}
                     </TableBody>
                 </Table>
             </Box>

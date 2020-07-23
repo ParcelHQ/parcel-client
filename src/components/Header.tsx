@@ -5,11 +5,9 @@ import {
     Flex,
     Heading,
     Button,
-    Icon,
     Image,
     Box,
     Link,
-    Tag,
     List,
     ListItem,
     IconButton,
@@ -42,7 +40,7 @@ import SideDrawer from './SideDrawer';
 
 const Header = ({ triedEager }: { triedEager: boolean }): JSX.Element => {
     const { colorMode, toggleColorMode } = useColorMode();
-    const { account, active, connector, error, deactivate } = useWeb3React<Web3Provider>();
+    const { account, active, error, deactivate } = useWeb3React<Web3Provider>();
     const NavDrawer = useDisclosure();
     const WalletsModal = useDisclosure();
 

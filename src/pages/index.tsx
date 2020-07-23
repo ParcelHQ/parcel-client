@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Heading, Text, Box, Button, Link, Flex, Grid } from '@chakra-ui/core';
+import { Heading, Text, Box, Button, Link, Flex } from '@chakra-ui/core';
 import NextLink from 'next/link';
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';

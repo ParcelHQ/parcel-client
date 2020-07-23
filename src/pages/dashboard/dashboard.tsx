@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
     Skeleton,
     Box,
@@ -23,12 +23,13 @@ import {
     Tooltip,
     Tag,
 } from '@chakra-ui/core';
-import Entry from './Entry';
 import styled from '@emotion/styled';
+import { useTable } from 'react-table';
+import { v4 as uuidv4 } from 'uuid';
 
 function Table(props: BoxProps) {
     return (
-        <Box shadow="sm" rounded="lg" overflow="hidden">
+        <Box shadow="sm" rounded="lg" overflow="auto" borderWidth="1px">
             <Box as="table" width="full" {...props} />
         </Box>
     );
@@ -51,12 +52,12 @@ function TableHeader(props: BoxProps) {
             borderBottomWidth="1px"
             textAlign="left"
             fontSize="xs"
-            color="gray.500"
-            backgroundColor="gray.50"
+            // color="gray.500"
+            // backgroundColor="gray.50"
             textTransform="uppercase"
             letterSpacing="wider"
             lineHeight="1rem"
-            fontWeight="medium"
+            fontWeight="bold"
             {...props}
         />
     );
@@ -64,6 +65,10 @@ function TableHeader(props: BoxProps) {
 
 function TableBody(props: BoxProps) {
     return <Box as="tbody" {...props} />;
+}
+
+function TableCell(props: BoxProps) {
+    return <Box as="td" px="6" py="4" lineHeight="1.25rem" whiteSpace="nowrap" {...props} />;
 }
 
 export default function Dashboard() {
@@ -90,23 +95,63 @@ export default function Dashboard() {
         };
     }, []);
 
-    const entries: any[] = [
-        {
-            remark: 'Paid Marketing Team',
-            date: 1595191030609,
-            recipients: '0x1d9999be880e7e516dEefdA00a3919BdDE9C1707',
-        },
-        {
-            remark: 'Added Time Berners Lee',
-            date: 1595191030609,
-            recipients: '0x1d9999be880e7e516dEefdA00a3919BdDE9C1707',
-        },
-        {
-            remark: 'Paid Larry Ellison',
-            date: 1595191030609,
-            recipients: '0x1d9999be880e7e516dEefdA00a3919BdDE9C1707',
-        },
-    ];
+    const data = useMemo(
+        () => [
+            {
+                col1: 'Added Software Engineer Time Berners-Lee to Payroll',
+                col2: new Date(1595191030609).toUTCString(),
+                col3: '0x1d9999be880e7e516dEefdA00a3919BdDE9C1707',
+                col4: '1800000000000000000',
+            },
+            {
+                col1: 'Paid Marketing Team',
+                col2: new Date(1595191030609).toUTCString(),
+                col3: '0x1d9999be880e7e516dEefdA00a3919BdDE9C1707',
+                col4: '1800000000000000000',
+            },
+            {
+                col1: 'Paid Contractor Larry Ellison',
+                col2: new Date(1595191030609).toUTCString(),
+                col3: '0x1d9999be880e7e516dEefdA00a3919BdDE9C1707',
+                col4: '1800000000000000000',
+            },
+        ],
+        [],
+    );
+
+    const columns = useMemo(
+        () => [
+            {
+                Header: 'Remarks',
+                accessor: 'col1',
+                style: {
+                    fontWeight: 'bold',
+                },
+            },
+            {
+                Header: 'Date',
+                accessor: 'col2',
+            },
+            {
+                Header: 'Receiver',
+                accessor: 'col3',
+            },
+            {
+                Header: 'Amount',
+                accessor: 'col4',
+            },
+        ],
+        [],
+    );
+
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        rows,
+        prepareRow,
+        //@ts-ignore
+    } = useTable({ columns, data });
 
     return (
         <>
@@ -212,12 +257,16 @@ export default function Dashboard() {
                     <Box mt={4}>
                         <List spacing={3}>
                             <ListItem>
-                                <ListIcon icon="check-circle" color="green.500" />
-                                Payroll due on 1st August, 2020 of Marketing team - $20k
+                                <ListIcon icon="chalendar" color="red.500" />
+                                Marketing Payroll due on 1st August, 2020 at 11am PST - $20k
+                            </ListItem>
+                            <ListItem>
+                                <ListIcon icon="calendar" color="red.500" />
+                                Engineering Payroll due on 1st August, 2020 at 11am PST - $90k
                             </ListItem>
                             <ListItem>
                                 <ListIcon icon="check-circle" color="green.500" />
-                                Payroll due on 1st August, 2020 of Engineering team - $90k
+                                Paying Larry Page - $15,000 - on 4th August, 2020 at 11am PST
                             </ListItem>
                         </List>
                     </Box>
@@ -231,19 +280,33 @@ export default function Dashboard() {
                     <Text fontSize="2xl">Recent Transactions</Text>
                 </Tag>
 
-                <Table>
+                <Table {...getTableProps()}>
                     <TableHead>
-                        <TableRow>
-                            <TableHeader>Remarks</TableHeader>
-                            <TableHeader>Date</TableHeader>
-                            <TableHeader>Recipient(s)</TableHeader>
-                        </TableRow>
+                        {headerGroups.map((headerGroup) => (
+                            <TableRow {...headerGroup.getHeaderGroupProps()} key={uuidv4()}>
+                                {headerGroup.headers.map((column) => (
+                                    <TableHeader {...column.getHeaderProps()} key={uuidv4()}>
+                                        {column.render('Header')}
+                                    </TableHeader>
+                                ))}
+                            </TableRow>
+                        ))}
                     </TableHead>
-                    <TableBody>
-                        {entries.length > 0 &&
-                            entries.map((entry: string, index: number) => {
-                                return <Entry entry={entry} key={index} index={index} />;
-                            })}
+                    <TableBody {...getTableBodyProps()}>
+                        {rows.map((row) => {
+                            prepareRow(row);
+                            return (
+                                <TableRow {...row.getRowProps()} key={uuidv4()}>
+                                    {row.cells.map((cell) => {
+                                        return (
+                                            <TableCell {...cell.getCellProps()} key={uuidv4()}>
+                                                {cell.render('Cell')}
+                                            </TableCell>
+                                        );
+                                    })}
+                                </TableRow>
+                            );
+                        })}
                     </TableBody>
                 </Table>
             </Box>
