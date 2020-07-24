@@ -7,3 +7,6 @@ interface Window {
     web3?: any;
     ipfs?: any;
 }
+
+declare module 'ipfs-http-client';
+declare module 'eth-ens-namehash';

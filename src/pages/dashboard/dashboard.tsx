@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import {
-    Skeleton,
     Box,
     Heading,
     Stat,
@@ -8,7 +7,6 @@ import {
     StatNumber,
     StatHelpText,
     StatArrow,
-    StatGroup,
     Text,
     List,
     ListItem,
@@ -19,11 +17,8 @@ import {
     Progress,
     BoxProps,
     Grid,
-    Flex,
-    Tooltip,
     Tag,
 } from '@chakra-ui/core';
-import styled from '@emotion/styled';
 import { useTable } from 'react-table';
 import { v4 as uuidv4 } from 'uuid';
 

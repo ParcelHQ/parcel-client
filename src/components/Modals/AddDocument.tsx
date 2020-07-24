@@ -9,12 +9,12 @@ import {
     ModalFooter,
     ModalBody,
     ModalCloseButton,
-    FormControl,
-    FormLabel,
-    Input,
 } from '@chakra-ui/core';
 import { useDropzone } from 'react-dropzone';
 import styled from '@emotion/styled';
+
+import ipfsClient from 'ipfs-http-client';
+const ipfs = ipfsClient('https://ipfs.infura.io:5001');
 
 const getColor = (props: any) => {
     if (props.isDragAccept) {
@@ -45,75 +45,33 @@ const Container = styled.div`
     transition: border 0.24s ease-in-out;
 `;
 
-const ThumbsContainer = styled.aside`
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    margin-top: 16;
-`;
-
-const Thumb = styled.div`
-    display: inline-flex;
-    border-radius: 2;
-    border: 1px solid #eaeaea;
-    margin-bottom: 8;
-    margin-right: 8;
-    width: 100;
-    height: 100;
-    padding: 4;
-`;
-
-const ThumbInner = styled.div`
-    display: flex;
-    min-width: 0;
-    overflow: hidden;
-`;
-
-const Img = styled.img`
-    display: block;
-    width: auto;
-    height: 100%;
-`;
-
 export default function AddDocument({ isOpen, onClose }: any) {
-    const [files, setFiles] = useState<any>([]);
+    const [storageValue, setStorageValue] = useState('');
+    const [buffer, setBuffer] = useState('');
 
-    const onSubmit = () => {
-        console.log('submitted');
+    console.log('ipfs:', ipfs);
+
+    const onSubmit = async (event: any) => {
+        event.preventDefault();
+        //encrypty buffer and then move to ipfs
+        const mystuff = await ipfs.add(buffer);
+        console.log('mystuff:', mystuff);
+        const res = await ipfs.add(buffer);
+        setStorageValue(res.path);
+
+        // const result = await ipfsSDK.addFile(buffer)
+        // call contract method, passing in ipfs hash
     };
 
     const onDrop = useCallback((acceptedFiles: any) => {
-        console.log('acceptedFiles:', acceptedFiles);
+        const file = acceptedFiles[0];
+        const reader = new window.FileReader();
+        reader.readAsArrayBuffer(file);
+        //@ts-ignore
+        reader.onloadend = () => setBuffer(Buffer(reader.result));
     }, []);
 
-    const { getRootProps, getInputProps } = useDropzone({
-        accept: 'image/*',
-        onDrop: (acceptedFiles) => {
-            setFiles(
-                acceptedFiles.map((file: any) =>
-                    Object.assign(file, {
-                        preview: URL.createObjectURL(file),
-                    }),
-                ),
-            );
-        },
-    });
-
-    const thumbs = files.map((file: any) => (
-        <Thumb key={file.name}>
-            <ThumbInner>
-                <Img src={file.preview} />
-            </ThumbInner>
-        </Thumb>
-    ));
-
-    useEffect(
-        () => () => {
-            // Make sure to revoke the data uris to avoid memory leaks
-            files.forEach((file: any) => URL.revokeObjectURL(file.preview));
-        },
-        [files],
-    );
+    const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} isCentered>
@@ -128,10 +86,10 @@ export default function AddDocument({ isOpen, onClose }: any) {
                                 <input {...getInputProps()} />
                                 <p>Drop your files here</p>
                             </div>
-                            <ThumbsContainer>{thumbs}</ThumbsContainer>
                         </Container>
-                        <Button type="button">Submit</Button>
+                        <Button type="submit">Submit</Button>
                     </form>
+                    {storageValue !== '' && <img src={`https://ipfs.io/ipfs/${storageValue}`} alt="No-images" />}
                 </ModalBody>
 
                 <ModalFooter>

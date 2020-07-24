@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { useWeb3React } from '@web3-react/core';
-import { Web3Provider } from '@ethersproject/providers';
+import React, { useState } from 'react';
+import { keccak256 } from '@ethersproject/keccak256';
+import { toUtf8Bytes } from '@ethersproject/strings';
+import addresses, { RINKEBY_ID } from '../../utils/addresses';
+import { useContract } from '../../hooks';
+import ParcelFactoryContract from '../../abis/ParcelFactory.json';
 import {
     Heading,
     Button,
@@ -14,37 +17,35 @@ import {
     FormErrorMessage,
 } from '@chakra-ui/core';
 import { useForm } from 'react-hook-form';
-import { useRouter } from 'next/router';
-import axios from 'axios';
+import namehash from 'eth-ens-namehash';
 
 export default function Create() {
-    const router = useRouter();
-    const { account } = useWeb3React<Web3Provider>();
+    const parcelFactoryContract = useContract(addresses[RINKEBY_ID].parcelFactory, ParcelFactoryContract.abi, true);
 
-    const [organization, setOrganization] = useState<any>({
-        name: '',
-        walletAddress: '',
-        ens: '',
-        logo: '',
-        createdBy: '',
-        createdOn: '',
-    });
-    useEffect(() => {
-        if (!!account) setOrganization({ ...organization, createdBy: account });
-        // return () => {};
-    }, [account]);
+    const [ensName, setEnsName] = useState('');
+
+    function onSubmit(e: any) {
+        e.preventDefault();
+
+        console.log('ensName:', ensName);
+
+        const PARCEL_ID_HASH = namehash.hash('parcelid.eth');
+
+        const nameHash = keccak256(toUtf8Bytes(ensName));
+        console.log('nameHash:', nameHash);
+
+        const ensDomain = ensName + '.parcelid.eth';
+        console.log('ensDomain:', ensDomain);
+        const ensFullDomainHash = namehash.hash(ensDomain);
+        console.log('ensFullDomainHash:', ensFullDomainHash);
+
+        //@ts-ignore
+        parcelFactoryContract.register(PARCEL_ID_HASH, nameHash, ensFullDomainHash);
+    }
 
     const { register, errors, handleSubmit } = useForm<{ name: string }>({
         mode: 'onChange',
     });
-
-    const onSubmit = (e: any) => {
-        // e.preventDefault();
-        const nameWithId = name + 'parcelid.eth';
-        console.log('nameWithId:', nameWithId);
-
-        router.push('/dashboard');
-    };
 
     return (
         <Box pb="6rem" pt="10rem">
@@ -54,18 +55,17 @@ export default function Create() {
                         Register an Organization
                     </Heading>
 
-                    <form onSubmit={handleSubmit(onSubmit)} style={{ textAlign: 'center' }}>
+                    <form onSubmit={onSubmit} style={{ textAlign: 'center' }}>
                         <FormControl>
-                            {/* <FormLabel htmlFor="orgWalletAddress">ENS ID</FormLabel> */}
-                            <InputGroup size="md" my="2rem">
+                            <InputGroup my="2rem">
                                 <Input
-                                    id="ensName"
+                                    style={{ borderTopLeftRadius: '0.25rem', borderBottomLeftRadius: '0.25rem' }}
                                     rounded="0"
+                                    id="ensName"
                                     placeholder="ethglobal"
-                                    isRequired
-                                    onChange={(e: any) => setOrganization({ ...organization, ens: e.target.value })}
+                                    onChange={(e: any) => setEnsName(e.target.value)}
                                     name="ensName"
-                                    value={organization.ens}
+                                    value={ensName}
                                     ref={register({
                                         required: 'This is required',
                                         minLength: {
@@ -80,9 +80,8 @@ export default function Create() {
                                 />
                                 <InputRightAddon>parcelid.eth</InputRightAddon>
                             </InputGroup>
-                            {errors.name && <FormErrorMessage>{errors.name.message}</FormErrorMessage>}
+                            {/* {errors.name && <FormErrorMessage>{errors.name.message}</FormErrorMessage>} */}
                         </FormControl>
-
                         <Button type="submit">Go</Button>
                     </form>
                 </Flex>

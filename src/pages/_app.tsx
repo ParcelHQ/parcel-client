@@ -6,6 +6,7 @@ import { Web3Provider } from '@ethersproject/providers';
 import { Web3ReactProvider, useWeb3React } from '@web3-react/core';
 import { Global } from '@emotion/core';
 import { ColorModeProvider, CSSReset, ThemeProvider } from '@chakra-ui/core';
+import { ContractProvider } from '../state/contracts/Context';
 
 import Layout from '../components/Layout';
 import Error from '../components/Error';
@@ -48,13 +49,15 @@ export default class App extends NextApp {
                     <meta name="description" content="crypto payroll with saplier, ipfs, and filecoin" />
                 </Head>
                 <Web3ReactProvider getLibrary={getLibrary}>
-                    <ThemeProvider theme={theme}>
-                        <ColorModeProvider>
-                            <CSSReset />
-                            <Global styles={GlobalStyle} />
-                            <Application Component={Component} />
-                        </ColorModeProvider>
-                    </ThemeProvider>
+                    <ContractProvider>
+                        <ThemeProvider theme={theme}>
+                            <ColorModeProvider>
+                                <CSSReset />
+                                <Global styles={GlobalStyle} />
+                                <Application Component={Component} />
+                            </ColorModeProvider>
+                        </ThemeProvider>
+                    </ContractProvider>
                 </Web3ReactProvider>
             </>
         );

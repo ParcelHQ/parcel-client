@@ -1,4 +1,4 @@
-// const withImages = require('next-images');
+const withImages = require('next-images');
 
 module.exports = {
     reactStrictMode: true,
@@ -12,4 +12,4 @@ module.exports = {
     },
 };
 
-// module.exports = withImages();
+module.exports = withImages();

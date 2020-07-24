@@ -11,35 +11,12 @@ import {
     ModalCloseButton,
     Flex,
 } from '@chakra-ui/core';
-import { MdBuild, MdCall } from 'react-icons/md';
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 import { injected, portis, fortmatic, walletconnect, walletlink } from '../../utils/connectors';
 
-enum ConnectorNames {
-    Injected = 'Injected',
-    WalletConnect = 'WalletConnect',
-    WalletLink = 'WalletLink',
-    Fortmatic = 'Fortmatic',
-    Portis = 'Portis',
-}
-
-const connectorsByName: { [connectorName in ConnectorNames]: any } = {
-    [ConnectorNames.Injected]: injected,
-    [ConnectorNames.WalletConnect]: walletconnect,
-    [ConnectorNames.WalletLink]: walletlink,
-    [ConnectorNames.Fortmatic]: fortmatic,
-    [ConnectorNames.Portis]: portis,
-};
-
 const SignInModal = ({ isOpen, onClose }: any) => {
-    const { account, active, activate, connector, error } = useWeb3React<Web3Provider>();
-
-    // const [activatingConnector, setActivatingConnector] = useState<any>();
-
-    // useEffect(() => {
-    //     if (activatingConnector && activatingConnector === connector) setActivatingConnector(undefined);
-    // }, [activatingConnector, connector]);
+    const { active, activate, error } = useWeb3React<Web3Provider>();
 
     useEffect(() => {
         if (active && !error) onClose();
@@ -62,33 +39,10 @@ const SignInModal = ({ isOpen, onClose }: any) => {
                 <ModalCloseButton />
                 <ModalBody>
                     <Flex direction="column" justify="center" align="center">
-                        {/* {Object.keys(connectorsByName).map((name) => {
-                        //@ts-ignore
-                        const currentConnector = connectorsByName[name];
-                        const activating = currentConnector === activatingConnector;
-                        const connected = currentConnector === connector;
-                        const disabled = !!activatingConnector || connected || !!error;
-
-                        return (
-                            <Button
-                                isDisabled={disabled}
-                                isLoading={activating}
-                                key={name}
-                                onClick={() => {
-                                    setActivatingConnector(currentConnector);
-                                    //@ts-ignore
-                                    activate(connectorsByName[name]);
-                                }}
-                            >
-                                {name}
-                            </Button>
-                        );
-                    })} */}
-
                         <Flex direction="column" justify="space-between" align="center">
                             <Button onClick={() => SignIn('injected')}>Injected</Button>
 
-                            <Button onClick={() => SignIn('portis')} isDisabled>
+                            {/* <Button onClick={() => SignIn('portis')} isDisabled>
                                 Portis
                             </Button>
 
@@ -101,7 +55,7 @@ const SignInModal = ({ isOpen, onClose }: any) => {
 
                             <Button onClick={() => SignIn('coinbase')} isDisabled>
                                 Coinbase
-                            </Button>
+                            </Button> */}
                         </Flex>
                     </Flex>
                 </ModalBody>
