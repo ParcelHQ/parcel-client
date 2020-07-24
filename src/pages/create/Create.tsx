@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { keccak256 } from '@ethersproject/keccak256';
 import { toUtf8Bytes } from '@ethersproject/strings';
 import addresses, { RINKEBY_ID } from '../../utils/addresses';
@@ -15,77 +15,150 @@ import {
     FormControl,
     FormLabel,
     FormErrorMessage,
+    useToast,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
+    useDisclosure,
 } from '@chakra-ui/core';
+import { shortenAddress } from '../../utils';
+import { useWeb3React } from '@web3-react/core';
+import { Web3Provider } from '@ethersproject/providers';
 import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/router';
 import namehash from 'eth-ens-namehash';
 
 export default function Create() {
+    const router = useRouter();
+    const { library } = useWeb3React<Web3Provider>();
     const parcelFactoryContract = useContract(addresses[RINKEBY_ID].parcelFactory, ParcelFactoryContract.abi, true);
+    const toast = useToast();
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
-    const [ensName, setEnsName] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isInvalid, setIsInvalid] = useState(false);
+    const PARCEL_ID_HASH = namehash.hash('parcelid.eth');
 
-    function onSubmit(e: any) {
-        e.preventDefault();
+    async function onSubmit({ name }: any) {
+        setIsSubmitting(true);
 
-        console.log('ensName:', ensName);
+        const nameHash = keccak256(toUtf8Bytes(name));
+        const ensFullDomainHash = namehash.hash(name + '.parcelid.eth');
 
-        const PARCEL_ID_HASH = namehash.hash('parcelid.eth');
+        if (!!library) {
+            const doesItExist = await library.resolveName(name + '.parcelid.eth');
+            if (doesItExist) onOpen();
+            else if (!!parcelFactoryContract)
+                try {
+                    const tx = await parcelFactoryContract.register(PARCEL_ID_HASH, nameHash, ensFullDomainHash);
 
-        const nameHash = keccak256(toUtf8Bytes(ensName));
-        console.log('nameHash:', nameHash);
+                    toast({
+                        title: 'Transaction Submitted',
+                        description: `${shortenAddress(tx.hash)}`,
+                        status: 'info',
+                        position: 'bottom',
+                        duration: 3000,
+                        isClosable: true,
+                    });
 
-        const ensDomain = ensName + '.parcelid.eth';
-        console.log('ensDomain:', ensDomain);
-        const ensFullDomainHash = namehash.hash(ensDomain);
-        console.log('ensFullDomainHash:', ensFullDomainHash);
-
-        //@ts-ignore
-        parcelFactoryContract.register(PARCEL_ID_HASH, nameHash, ensFullDomainHash);
+                    const result = await tx.wait();
+                    toast({
+                        title: 'Transaction Confirmed',
+                        description: `${shortenAddress(result.transactionHash)}`,
+                        status: 'success',
+                        position: 'bottom',
+                        duration: 3000,
+                        isClosable: true,
+                    });
+                    router.push('/dashboard');
+                } catch (error) {
+                    toast({
+                        title: 'Transaction Failed',
+                        description: `${error.message}`,
+                        status: 'error',
+                        position: 'bottom',
+                        duration: 3000,
+                        isClosable: true,
+                    });
+                }
+        }
+        setIsSubmitting(false);
     }
 
     const { register, errors, handleSubmit } = useForm<{ name: string }>({
         mode: 'onChange',
     });
 
-    return (
-        <Box pb="6rem" pt="10rem">
-            <Box mx="auto" maxWidth="1280px">
-                <Flex direction="column" justify="center" align="center">
-                    <Heading as="h1" size="2xl" fontSize="2.25rem" fontWeight="800">
-                        Register an Organization
-                    </Heading>
+    function validateName(value: any) {
+        let error;
+        if (!value) {
+            error = 'Name is required';
+            setIsInvalid(true);
+        } else if (value.length < 5) {
+            error = 'Name must be longer than 5 characters';
+            setIsInvalid(true);
+        } else if (value.length > 20) {
+            error = 'Name must be longer than 20 characters';
+            setIsInvalid(true);
+        } else setIsInvalid(false);
 
-                    <form onSubmit={onSubmit} style={{ textAlign: 'center' }}>
-                        <FormControl>
-                            <InputGroup my="2rem">
-                                <Input
-                                    style={{ borderTopLeftRadius: '0.25rem', borderBottomLeftRadius: '0.25rem' }}
-                                    rounded="0"
-                                    id="ensName"
-                                    placeholder="ethglobal"
-                                    onChange={(e: any) => setEnsName(e.target.value)}
-                                    name="ensName"
-                                    value={ensName}
-                                    ref={register({
-                                        required: 'This is required',
-                                        minLength: {
-                                            value: 5,
-                                            message: 'Min length is 5 characters',
-                                        },
-                                        maxLength: {
-                                            value: 20,
-                                            message: 'Max length is 20 characters',
-                                        },
-                                    })}
-                                />
-                                <InputRightAddon>parcelid.eth</InputRightAddon>
-                            </InputGroup>
-                            {/* {errors.name && <FormErrorMessage>{errors.name.message}</FormErrorMessage>} */}
-                        </FormControl>
-                        <Button type="submit">Go</Button>
-                    </form>
-                </Flex>
+        return error || true;
+    }
+
+    return (
+        <>
+            <Box pb="6rem" pt="10rem">
+                <Box mx="auto" maxWidth="1280px">
+                    <Flex direction="column" justify="center" align="center" textAlign="center">
+                        <Heading as="h1" size="2xl" fontSize="2.25rem" fontWeight="800" mb="2rem">
+                            Register an Organization
+                        </Heading>
+
+                        <form onSubmit={handleSubmit(onSubmit)}>
+                            {/* @ts-ignore */}
+                            <FormControl isInvalid={errors.name}>
+                                <FormLabel aria-labelledby="ensName">
+                                    <InputGroup>
+                                        <Input
+                                            roundedTopRight="0"
+                                            roundedBottomRight="0"
+                                            id="ensName"
+                                            name="name"
+                                            placeholder="ethglobal"
+                                            isInvalid={isInvalid}
+                                            ref={register({ validate: validateName })}
+                                        />
+                                        <InputRightAddon>parcelid.eth</InputRightAddon>
+                                    </InputGroup>
+                                </FormLabel>
+
+                                <FormErrorMessage>{errors.name && errors.name.message}</FormErrorMessage>
+                            </FormControl>
+
+                            <Button mt="1rem" isLoading={isSubmitting} type="submit">
+                                Go
+                            </Button>
+                        </form>
+                    </Flex>
+                </Box>
             </Box>
-        </Box>
+
+            <Modal isOpen={isOpen} onClose={onClose} isCentered>
+                <ModalOverlay />
+                <ModalContent borderRadius="0.25rem">
+                    <ModalHeader>Name already taken</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>Please enter in a new name and try again</ModalBody>
+
+                    <ModalFooter>
+                        <Button onClick={onClose}>Close</Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+        </>
     );
 }
