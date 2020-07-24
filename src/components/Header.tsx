@@ -53,7 +53,7 @@ const Header = ({ triedEager }: { triedEager: boolean }): JSX.Element => {
                         <Link href="/dashboard" _hover={{ cursor: 'pointer' }} ml="1rem">
                             <Flex>
                                 <Image
-                                    size={{ sm: '40px', md: '50px' }}
+                                    size={{ xs: '40px', md: '50px' }}
                                     objectFit="cover"
                                     src="./logo.svg"
                                     alt="Parcel Logo"
