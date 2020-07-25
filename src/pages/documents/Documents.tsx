@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import {
     Heading,
     Button,
@@ -14,6 +14,9 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import AddDocument from '../../components/Modals/AddDocument';
 import { useTable } from 'react-table';
+import addresses, { RINKEBY_ID } from '../../utils/addresses';
+import ParcelWalletContract from '../../abis/ParcelWallet.json';
+import { useContract } from '../../hooks';
 
 function Table(props: BoxProps) {
     return (
@@ -60,6 +63,8 @@ function TableCell(props: BoxProps) {
 }
 
 export default function Documents() {
+    const parcelWalletContract = useContract(addresses[RINKEBY_ID].parcelWallet, ParcelWalletContract, true);
+
     const data = useMemo(
         () => [
             {
@@ -103,6 +108,17 @@ export default function Documents() {
         prepareRow,
         //@ts-ignore
     } = useTable({ columns, data });
+
+    useEffect(() => {
+        (async () => {
+            if (parcelWalletContract) {
+                const result = await parcelWalletContract.files(1);
+                console.log('result:', result);
+            }
+        })();
+
+        return () => {};
+    }, [parcelWalletContract]);
 
     return (
         <>

@@ -10,3 +10,4 @@ interface Window {
 
 declare module 'ipfs-http-client';
 declare module 'eth-ens-namehash';
+declare module 'parcel-sdk';

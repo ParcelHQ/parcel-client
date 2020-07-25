@@ -1,5 +1,6 @@
 import React, { useState, useEffect, ChangeEvent, useCallback } from 'react';
 import {
+    Flex,
     Button,
     ButtonGroup,
     Modal,
@@ -12,9 +13,12 @@ import {
 } from '@chakra-ui/core';
 import { useDropzone } from 'react-dropzone';
 import styled from '@emotion/styled';
+import addresses, { RINKEBY_ID } from '../../utils/addresses';
+import ParcelWalletContract from '../../abis/ParcelWallet.json';
+import { useContract } from '../../hooks';
+import { utils } from 'ethers';
 
-import ipfsClient from 'ipfs-http-client';
-const ipfs = ipfsClient('https://ipfs.infura.io:5001');
+import parcel from 'parcel-sdk';
 
 const getColor = (props: any) => {
     if (props.isDragAccept) {
@@ -46,21 +50,31 @@ const Container = styled.div`
 `;
 
 export default function AddDocument({ isOpen, onClose }: any) {
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [storageValue, setStorageValue] = useState('');
     const [buffer, setBuffer] = useState('');
 
-    console.log('ipfs:', ipfs);
+    const parcelWalletContract = useContract(addresses[RINKEBY_ID].parcelWallet, ParcelWalletContract, true);
+    console.log('parcelWalletContract:', parcelWalletContract);
 
     const onSubmit = async (event: any) => {
         event.preventDefault();
-        //encrypty buffer and then move to ipfs
-        const mystuff = await ipfs.add(buffer);
-        console.log('mystuff:', mystuff);
-        const res = await ipfs.add(buffer);
-        setStorageValue(res.path);
+        // setIsSubmitting(true);
 
-        // const result = await ipfsSDK.addFile(buffer)
-        // call contract method, passing in ipfs hash
+        //! replace hello with signature key from ethers
+        const encryptedData = parcel.cryptoUtils.encryptData(buffer, 'hello');
+
+        const res = await parcel.ipfs.addData(encryptedData);
+        console.log('res:', res.string);
+
+        // const HEX_VALUE = utils.formatBytes32String(res.string);
+        // console.log('HEX_VALUE:', HEX_VALUE);
+        // setStorageValue(res.path);
+
+        const result = await parcelWalletContract!.addFile(1, res.string);
+        console.log('result:', result);
+
+        // setIsSubmitting(false);
     };
 
     const onDrop = useCallback((acceptedFiles: any) => {
@@ -71,7 +85,7 @@ export default function AddDocument({ isOpen, onClose }: any) {
         reader.onloadend = () => setBuffer(Buffer(reader.result));
     }, []);
 
-    const { getRootProps, getInputProps } = useDropzone({ onDrop });
+    const { acceptedFiles, getRootProps, getInputProps } = useDropzone({ onDrop });
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} isCentered>
@@ -81,23 +95,31 @@ export default function AddDocument({ isOpen, onClose }: any) {
                 <ModalCloseButton />
                 <ModalBody>
                     <form onSubmit={onSubmit}>
-                        <Container>
-                            <div {...getRootProps({ className: 'dropzone' })}>
-                                <input {...getInputProps()} />
-                                <p>Drop your files here</p>
-                            </div>
+                        <Container {...getRootProps({ className: 'dropzone' })}>
+                            <input {...getInputProps()} />
+                            <p>Drag n drop some files here, or click to select files</p>
                         </Container>
-                        <Button type="submit">Submit</Button>
+                        <aside>
+                            <ul>
+                                {acceptedFiles.map((file: any) => (
+                                    <li key={file.path}>
+                                        {file.path} - {file.size} bytes
+                                    </li>
+                                ))}
+                            </ul>
+                        </aside>
+                        <Button type="submit" isLoading={isSubmitting}>
+                            Submit
+                        </Button>
                     </form>
-                    {storageValue !== '' && <img src={`https://ipfs.io/ipfs/${storageValue}`} alt="No-images" />}
+                    {/* {
+        storageValue !== '' && <img src={`https://ipfs.io/ipfs/${storageValue}`} alt="No-images" />;
+    } */}
                 </ModalBody>
 
                 <ModalFooter>
                     <ButtonGroup>
-                        <Button variantColor="purple" onClick={onClose}>
-                            Cancel
-                        </Button>
-                        <Button onClick={onClose}>Save</Button>
+                        <Button onClick={onClose}>Cancel</Button>
                     </ButtonGroup>
                 </ModalFooter>
             </ModalContent>
