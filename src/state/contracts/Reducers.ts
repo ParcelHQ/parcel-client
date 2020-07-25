@@ -6,8 +6,7 @@ export const ContractReducer = (state: any, action: any) => {
             return [
                 ...state,
                 {
-                    title: action.book.title,
-                    author: action.book.author,
+                   ///
                 },
             ];
 
